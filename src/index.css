@@ -1,1 +1,162 @@
 @import "tailwindcss";
+
+@theme inline {
+  /* --breakpoint-*: initial; */
+  --breakpoint-xs: 425px;
+  --breakpoint-mobile: 430px;
+  --breakpoint-tablet: 834px;
+  --breakpoint-desktop: 1440px;
+
+  --color-*: initial;
+  --color-blue: #0a84ff;
+  --color-dev: #0dca51; /* #a6ff00; #0dca51*/
+  --color-icpc: #fa114f;
+  --color-ai: #00fff6;
+  --color-white-blue: #a5b6cf;
+  --color-gray: #646464;
+  --color-dark-1: #14181c;
+  --color-dark-2: #0f1317;
+  --color-blue-git: #0a0e12;
+  --color-blue-dark: #000307;
+
+  /* --font-*: initial; */
+  --font-Inter: var(--inter);
+  --font-Play: var(--play);
+  --font-OpenSans: var(--openSans);
+  --font-Raleway: var(--raleway);
+  --font-Code: var(--sourceCodePro);
+
+  --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+
+  /* --text-*: initial; */
+  --text-H1-desktop: 100px;
+  --text-H1-desktop--line-height: 130%;
+  --text-H2-desktop: 80px;
+  --text-H2-desktop--line-height: 130%;
+  --text-H3-desktop: 64px;
+  --text-H3-desktop--line-height: 130%;
+  --text-H4-desktop: 50px;
+  --text-H4-desktop--line-height: 130%;
+  --text-H5-desktop: 40px;
+  --text-H5-desktop--line-height: 130%;
+  --text-H6-desktop: 32px;
+  --text-H6-desktop--line-height: 130%;
+  --text-H7-desktop: 26px;
+  --text-H7-desktop--line-height: 130%;
+  --text-P-lg-desktop: 32px;
+  --text-P-lg-desktop--line-height: 145%;
+  --text-P-desktop: 26px;
+  --text-P-desktop--line-height: 145%;
+  --text-P-sm-desktop: 20px;
+  --text-P-sm-desktop--line-height: 145%;
+  --text-P-xs-desktop: 16px;
+  --text-P-xs-desktop--line-height: 145%;
+
+  --text-H1-tablet: 76px;
+  --text-H1-tablet--line-height: 130%;
+  --text-H2-tablet: 50px;
+  --text-H2-tablet--line-height: 130%;
+  --text-H3-tablet: 40px;
+  --text-H3-tablet--line-height: 130%;
+  --text-H4-tablet: 34px;
+  --text-H4-tablet--line-height: 130%;
+  --text-H5-tablet: 28px;
+  --text-H5-tablet--line-height: 130%;
+  --text-H6-tablet: 24px;
+  --text-H6-tablet--line-height: 130%;
+  --text-H7-tablet: 20px;
+  --text-H7-tablet--line-height: 130%;
+  --text-P-lg-tablet: 24px;
+  --text-P-lg-tablet--line-height: 145%;
+  --text-P-tablet: 20px;
+  --text-P-tablet--line-height: 145%;
+  --text-P-sm-tablet: 16px;
+  --text-P-sm-tablet--line-height: 145%;
+  --text-P-xs-tablet: 14px;
+  --text-P-xs-tablet--line-height: 145%;
+
+  --text-H1-mobile: 60px;
+  --text-H1-mobile--line-height: 130%;
+  --text-H2-mobile: 32px;
+  --text-H2-mobile--line-height: 130%;
+  --text-H3-mobile: 28px;
+  --text-H3-mobile--line-height: 130%;
+  --text-H4-mobile: 24px;
+  --text-H4-mobile--line-height: 130%;
+  --text-H5-mobile: 22px;
+  --text-H5-mobile--line-height: 130%;
+  --text-H6-mobile: 20px;
+  --text-H6-mobile--line-height: 130%;
+  --text-H7-mobile: 18px;
+  --text-H7-mobile--line-height: 130%;
+  --text-P-lg-mobile: 20px;
+  --text-P-lg-mobile--line-height: 145%;
+  --text-P-mobile: 18px;
+  --text-P-mobile--line-height: 145%;
+  --text-P-sm-mobile: 16px;
+  --text-P-sm-mobile--line-height: 145%;
+  --text-P-xs-mobile: 14px;
+  --text-P-xs-mobile--line-height: 145%;
+}
+
+.play {
+  font-family: "Play", sans-serif;
+}
+
+.text-h1 {
+  @apply text-H1-mobile tablet:text-H1-tablet desktop:text-H1-desktop;
+}
+
+.text-h2 {
+  @apply text-H2-mobile tablet:text-H2-tablet desktop:text-H2-desktop;
+}
+
+.text-h3 {
+  @apply text-H3-mobile tablet:text-H3-tablet desktop:text-H3-desktop;
+}
+
+.text-h4 {
+  @apply text-H4-mobile tablet:text-H4-tablet desktop:text-H4-desktop;
+}
+
+.text-h5 {
+  @apply text-H5-mobile tablet:text-H5-tablet desktop:text-H5-desktop;
+}
+
+.text-h6 {
+  @apply text-H6-mobile tablet:text-H6-tablet desktop:text-H6-desktop;
+}
+
+.text-h7 {
+  @apply text-H7-mobile tablet:text-H7-tablet desktop:text-H7-desktop;
+}
+
+.text-p-lg {
+  @apply text-P-lg-mobile tablet:text-P-lg-tablet desktop:text-P-lg-desktop;
+}
+
+.text-p {
+  @apply text-P-mobile tablet:text-P-tablet desktop:text-P-desktop;
+}
+
+.text-p-sm {
+  @apply text-P-sm-mobile tablet:text-P-sm-tablet desktop:text-P-sm-desktop;
+}
+
+.text-p-xs {
+  @apply text-P-xs-mobile tablet:text-P-xs-tablet desktop:text-P-xs-desktop;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.w-pantalla {
+  @apply w-[1400px];
+}
+
+.max-w-pantalla {
+  @apply max-w-[1400px];
+}
