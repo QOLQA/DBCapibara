@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import HomeView from "./features/home/homeView";
 import UserHomeView from "./features/user/views/userHomeView";
 import DiagramHomeView from "./features/diagram/views/diagramHomeView";
+import DiagramErrorView from "./features/diagram/views/DiagramErrorView";
 
 const router = createBrowserRouter([
 	{
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "diagram/:diagramId",
+				errorElement: <DiagramErrorView />,
 				Component: DiagramHomeView,
 				loader: async ({ request, params }) => {
 					const response = await fetch(
@@ -22,8 +24,13 @@ const router = createBrowserRouter([
 							signal: request.signal,
 						},
 					);
-					return await response.json();
+					const data = await response.json();
+					if (response.status === 400 || response.status === 404) {
+						throw new Error(data.detail);
+					}
+					return data;
 				},
+				// La excepcion que puede lanzar el loader debe mostrarse en el componente
 			},
 			{
 				path: "*",
