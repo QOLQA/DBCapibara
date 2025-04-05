@@ -1,15 +1,22 @@
-import { useParams } from "react-router-dom";
+// import DatabaseDiagram from "../components/ToEliminate";
+import { useLoaderData } from "react-router-dom";
 import DatabaseDiagram from "../components/DataBaseDiagram";
 import { Layout } from "@/components/Layout";
+import type { Edge } from "@xyflow/react";
 
 export default function DiagramHomeView() {
-	const { diagramId } = useParams();
+	const data = useLoaderData();
+	const initialEdges: Edge[] = [
+		{ id: "edge1", source: "table1", target: "table2", type: "smoothstep" },
+	];
 
 	return (
 		<>
 			<Layout>
-				<header>Main diagram home view. Diagram id {diagramId}</header>
-				<DatabaseDiagram />
+				<DatabaseDiagram
+					initialNodes={data.submodels}
+					initialEdges={initialEdges}
+				/>
 			</Layout>
 		</>
 	);

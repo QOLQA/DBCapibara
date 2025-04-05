@@ -10,16 +10,15 @@ import {
 import type { Node, Edge } from "@xyflow/react";
 import type { TableData } from "./TableNode";
 
-import { nodeTypes, initialNodes } from "./TableNode";
+import { nodeTypes } from "./TableNode";
 import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 
-const initialEdges: Edge[] = [
-	{ id: "edge1", source: "table1", target: "table2", type: "smoothstep" },
-];
-
-const DatabaseDiagram: React.FC = () => {
+const DatabaseDiagram = ({
+	initialNodes,
+	initialEdges,
+}: { initialNodes: Node<TableData>[]; initialEdges: Edge[] }) => {
 	const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
 	const [edges, _, onEdgesChange] = useEdgesState(initialEdges);
 	const [isModalOpen, setIsModalOpen] = useState(false);
