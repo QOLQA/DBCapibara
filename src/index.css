@@ -276,6 +276,10 @@
   }
 }
 
+.table {
+  @apply border border-border-gray rounded-xl;
+}
+
 .table-header {
   @apply text-white py-2.5 bg-black pl-5 pr-1 rounded-t-xl border border-border-gray flex justify-between items-center;
 }
@@ -288,10 +292,18 @@
   @apply py-2.5 pl-5 pr-1 border border-border-gray flex justify-between items-center;
 }
 
-.table-attribute-type {
+.table-attributes div {
   @apply text-gray flex gap-2.5 items-center;
 }
 
 .nested-table .table-attribute:last-child {
+  @apply rounded-b-xl;
+}
+
+.table-nesteds {
+  @apply p-5 flex flex-col gap-2.5;
+}
+
+.table-attribute:last-child {
   @apply rounded-b-xl;
 }

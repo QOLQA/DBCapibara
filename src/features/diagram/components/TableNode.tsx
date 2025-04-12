@@ -73,43 +73,32 @@ export interface TableData {
 // Custom node types
 export const TableNode = ({ data }: { data: TableData }) => {
 	return (
-		<div>
-			<div className="table-header">
+		// table
+		<div className="table">
+			{/* table header */}
+			<div className="table-header text-white">
 				<span>{data.label}</span>
 				<MoreButton />
 			</div>
+			{/* table content */}
 			<div className="table-content">
-				{data.columns.map((column) => (
-					<div key={column.id} className="table-attribute">
-						<span className="column-name text-white">{column.name}</span>
-						<div className="text-gray flex gap-2.5 items-center">
-							<span className="column-type">{column.type}</span>
-							<MoreButton />
-						</div>
-					</div>
-				))}
-				{data.nestedTables && data.nestedTables.length > 0 && (
-					<div className="nested-tables mx-4 py-4 flex flex-col gap-2">
-						{data.nestedTables.map((nestedTable) => (
-							<div key={nestedTable.label} className="nested-table">
-								<div className="table-header">
-									<span>{nestedTable.label}</span>
-									<MoreButton />
-								</div>
-								<div className="table-content">
-									{nestedTable.columns.map((column) => (
-										<div key={column.id} className="table-attribute">
-											<span className="column-name text-white">
-												{column.name}
-											</span>
-											<div className="table-attribute-type">
-												<span className="column-type">{column.type}</span>
-												<MoreButton />
-											</div>
-										</div>
-									))}
-								</div>
+				{/* table attributes */}
+				<div className="table-attributes">
+					{data.columns.map((column) => (
+						<div key={column.id} className="table-attribute">
+							<span className="text-white">{column.name}</span>
+							<div>
+								<span className="text-gray">{column.type}</span>
+								<MoreButton />
 							</div>
+						</div>
+					))}
+				</div>
+				{data.nestedTables && data.nestedTables.length > 0 && (
+					// table nested
+					<div className="table-nesteds">
+						{data.nestedTables.map((nestedTable) => (
+							<TableNode key={nestedTable.label} data={nestedTable} />
 						))}
 					</div>
 				)}
