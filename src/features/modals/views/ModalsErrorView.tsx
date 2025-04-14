@@ -12,7 +12,7 @@ const ModalsErrorView = () => {
 
 	return (
 		<div>
-			<h1>Error al cargar los diagrama</h1>
+			<h1>Error al cargar el diagrama</h1>
 			<p>{errorMessage}</p>
 		</div>
 	);
