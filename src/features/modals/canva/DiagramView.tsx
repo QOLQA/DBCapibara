@@ -22,6 +22,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 	return data;
 }
 
+// Placeholder for future action functionality. This function is intentionally left empty.
 export async function action() {}
 
 export default function DiagramView({ loaderData }: Route.ComponentProps) {
