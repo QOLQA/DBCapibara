@@ -2,17 +2,17 @@ import { type RouteConfig, index, route } from "@react-router/dev/routes";
 
 export default [
 	// Ruta principal
-	index("./features/home/homeView.tsx"),
+	index("./features/home/HomeView.tsx"),
 
 	// Vista general de los modals
-	route("modals", "./features/modals/views/modalsView.tsx"),
+	route("models", "./features/modals/views/ModalsView.tsx"),
 
 	// Vista del diagrama reactflow
-	route("modals/:diagramId/canva", "./features/modals/canva/DiagramView.tsx"),
+	route("models/:diagramId/canva", "./features/modals/canva/DiagramView.tsx"),
 
 	// Vista de análisis específica
 	route(
-		"modals/:diagramId/analysis",
+		"models/:diagramId/analysis",
 		"./features/modals/analysis/AnalysisView.tsx",
 	),
 ] satisfies RouteConfig;
