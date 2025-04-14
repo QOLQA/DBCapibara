@@ -16,7 +16,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 		method: "GET",
 	});
 	const data = await response.json();
-	if (response.status === 400 || response.status === 404) {
+	if (!response.ok) {
 		throw new Error(data.detail);
 	}
 	return data;
