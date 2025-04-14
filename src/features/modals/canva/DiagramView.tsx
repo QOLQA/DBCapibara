@@ -9,7 +9,9 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export async function loader({ params }: Route.LoaderArgs) {
 	const url = `${backendUrl}/solutions/${params.diagramId}`;
 
-	console.log("URL", url);
+	if (import.meta.env.MODE !== "production") {
+		console.log("URL", url);
+	}
 	const response = await fetch(url, {
 		method: "GET",
 	});
