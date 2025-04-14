@@ -1,3 +1,4 @@
+import React from "react";
 import type { Node } from "@xyflow/react";
 import { MoreButton } from "./MoreButton";
 
@@ -70,6 +71,18 @@ export interface TableData {
 	nestedTables?: TableData[];
 }
 
+const AttributeNode = ({ column }: { column: Column }) => {
+	return (
+		<div className="table-attribute">
+			<span className="text-white">{column.name}</span>
+			<div>
+				<span className="text-gray">{column.type}</span>
+				<MoreButton />
+			</div>
+		</div>
+	);
+};
+
 // Custom node types
 export const TableNode = ({ data }: { data: TableData }) => {
 	return (
@@ -84,14 +97,13 @@ export const TableNode = ({ data }: { data: TableData }) => {
 			<div className="table-content">
 				{/* table attributes */}
 				<div className="table-attributes">
-					{data.columns.map((column) => (
-						<div key={column.id} className="table-attribute">
-							<span className="text-white">{column.name}</span>
-							<div>
-								<span className="text-gray">{column.type}</span>
-								<MoreButton />
-							</div>
-						</div>
+					{data.columns.map((column, index) => (
+						<React.Fragment key={column.id}>
+							<AttributeNode column={column} />
+							{index < data.columns.length - 1 && (
+								<hr className="border border-border-gray" />
+							)}
+						</React.Fragment>
 					))}
 				</div>
 				{data.nestedTables && data.nestedTables.length > 0 && (
