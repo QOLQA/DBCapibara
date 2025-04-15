@@ -1,6 +1,6 @@
 import { useRouteError } from "react-router-dom";
 
-export default function DiagramErrorView() {
+const ModalsErrorView = () => {
 	const error = useRouteError();
 
 	let errorMessage = "Ocurrió un error inesperado.";
@@ -16,4 +16,6 @@ export default function DiagramErrorView() {
 			<p>{errorMessage}</p>
 		</div>
 	);
-}
+};
+
+export default ModalsErrorView;
