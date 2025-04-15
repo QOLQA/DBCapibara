@@ -10,17 +10,16 @@
   --breakpoint-tablet: 834px;
   --breakpoint-desktop: 1440px;
 
-  --color-*: initial;
-  --color-blue: #0a84ff;
-  --color-dev: #0dca51; /* #a6ff00; #0dca51*/
-  --color-icpc: #fa114f;
-  --color-ai: #00fff6;
-  --color-white-blue: #a5b6cf;
-  --color-gray: #646464;
-  --color-dark-1: #14181c;
-  --color-dark-2: #0f1317;
-  --color-blue-git: #0a0e12;
-  --color-blue-dark: #000307;
+  --color-blue: #0052cc;
+  --color-black: #0f0f0f; /* #a6ff00; #0dca51*/
+  --color-primary-gray: #171717;
+  --color-secondary-gray: #1e1e1e;
+  --color-terciary-gray: #232323;
+  --color-white: #dfdfdf;
+  --color-secondary-white: #9d9d9d;
+  --color-gray: #747474;
+  --color-border-gray: #363636;
+  --color-hover-gray: #292929;
 
   /* --font-*: initial; */
   --font-Inter: var(--inter);
@@ -275,4 +274,36 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.table {
+  @apply border border-border-gray rounded-xl;
+}
+
+.table-header {
+  @apply text-white py-2.5 bg-black pl-5 pr-1 flex justify-between items-center rounded-t-xl;
+}
+
+.table-content {
+  @apply bg-secondary-gray rounded-b-xl;
+}
+
+.table-attribute {
+  @apply py-2.5 pl-5 pr-1 flex justify-between items-center;
+}
+
+.table-attributes div {
+  @apply text-gray flex gap-2.5 items-center;
+}
+
+.nested-table .table-attribute:last-child {
+  @apply rounded-b-xl;
+}
+
+.table-nesteds {
+  @apply px-5 pb-5 flex flex-col gap-2.5;
+}
+
+.table-attribute:last-child {
+  @apply border-b-0;
 }
