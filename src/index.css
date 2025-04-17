@@ -307,3 +307,11 @@
 .table-attribute:last-child {
   @apply border-b-0;
 }
+
+.table-attribute .table-attribute__options {
+  @apply opacity-0 transition-opacity delay-150 duration-300 ease-in-out;
+}
+
+.table-attribute:hover .table-attribute__options {
+  @apply opacity-100;
+}
