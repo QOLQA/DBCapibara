@@ -1,5 +1,5 @@
 import DatabaseDiagram from "./components/DataBaseDiagram";
-import { LayoutDiagram } from "./components/LayoutDiagram";
+import { LayoutDiagram } from "./components/Sidebar/LayoutDiagram";
 
 import type { Edge } from "@xyflow/react";
 import type { Route } from "./+types/DiagramView";
