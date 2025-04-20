@@ -1,12 +1,12 @@
+import type React from "react";
 import { Button } from "@/components/ui/button";
 
-export const MoreButton = () => {
+export const MoreButton = ({ className }: React.ComponentProps<"button">) => {
 	return (
 		<Button
 			type="button"
 			size="icon"
-			variant="ghost"
-			className="cursor-pointer"
+			className={`cursor-pointer bg-transparent hover:bg-transparent ${className}`}
 			aria-label="More options"
 		>
 			<svg
