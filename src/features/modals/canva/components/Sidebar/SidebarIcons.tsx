@@ -29,12 +29,12 @@ export const SidebarIcons = ({
 	return (
 		<Sidebar
 			collapsible="none"
-			className="!w-[calc(var(--sidebar-width-icon)_+_1px)] border-r"
+			className="!w-[calc(var(--sidebar-width-icon)+1px)] bg-secondary-gray"
 		>
 			<SidebarContent>
 				<SidebarGroup>
-					<SidebarGroupContent className="px-1.5 md:px-0">
-						<SidebarMenu>
+					<SidebarGroupContent className="px-1. md:px-auto">
+						<SidebarMenu className="gap-4">
 							{data.navMain.map((item) => (
 								<SidebarMenuItem key={item.title}>
 									<SidebarMenuButton
@@ -47,15 +47,16 @@ export const SidebarIcons = ({
 												setActiveItem(item);
 												setOpen(true);
 											} else {
+												console.log("Database item clicked");
 												setOpen(false);
 												setActiveItem(item);
 											}
 										}}
 										isActive={activeItem?.title === item.title}
-										className="px-2.5 md:px-2"
+										className="!h-[2.375rem] !w-[2.375rem] flex items-center justify-center mx-auto text-gray hover:bg-hover-gray hover:text-gray [&>svg]:w-[1.25rem] [&>svg]:h-[1.25rem]"
 									>
 										{item.icon && item.icon}
-										<span>{item.title}</span>
+										<span className="md:hidden">{item.title}</span>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							))}
@@ -63,7 +64,7 @@ export const SidebarIcons = ({
 					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarContent>
-			<SidebarFooter>
+			<SidebarFooter className="p-0 w-[calc(var(--sidebar-width-icon)+1px)]">
 				<NavUser user={data.user} />
 			</SidebarFooter>
 		</Sidebar>

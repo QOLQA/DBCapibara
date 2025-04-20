@@ -5,14 +5,14 @@ import {
 	DataPie,
 } from "../../../../../components/icons/sidebar";
 import { SidebarIcons } from "./SidebarIcons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";
 
 const data = {
 	user: {
 		name: "shadcn",
 		email: "m@example.com",
-		avatar: "./icons/avatar.png",
+		avatar: "/user.png",
 	},
 	navMain: [
 		{
@@ -37,7 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar
 			collapsible="icon"
-			className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row"
+			className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row [&>[data-sidebar=sidebar]]:bg-secondary-gray py-5 bg-secondary-gray"
 			{...props}
 		>
 			<SidebarIcons

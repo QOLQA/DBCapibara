@@ -16,10 +16,13 @@ export const SidebarContentPrinc = ({
 	data,
 }: SidebarContentPrincProps) => {
 	return (
-		<Sidebar collapsible="none" className="hidden flex-1 md:flex">
-			<SidebarHeader className="gap-3.5 border-b p-4">
+		<Sidebar
+			collapsible="none"
+			className="hidden flex-1 md:flex bg-hover-gray rounded-2xl p-[36px] text-white	"
+		>
+			<SidebarHeader className="gap-3.5 border-b border-gray p-4">
 				<div className="flex w-full items-center justify-center">
-					<div className="text-base font-medium text-foreground">
+					<div className="text-base font-medium text-foreground text-white text-h5">
 						{activeItem?.title}
 					</div>
 				</div>
@@ -27,7 +30,7 @@ export const SidebarContentPrinc = ({
 			<SidebarGroupContent>
 				<SidebarGroup className="px-0">
 					<SidebarGroupContent>
-						<div className="flex flex-col gap-2 px-2 py-4">
+						<div className="">
 							{/* {data.items.map((item) => (
 								<div
 									key={item.title}
