@@ -22,7 +22,7 @@ export const SidebarContentPrinc = ({
 		>
 			<SidebarHeader className="gap-3.5 border-b border-gray p-4">
 				<div className="flex w-full items-center justify-center">
-					<div className="text-base font-medium text-foreground text-white text-h5">
+					<div className="text-base font-medium text-foreground text-white text-h3">
 						{activeItem?.title}
 					</div>
 				</div>
