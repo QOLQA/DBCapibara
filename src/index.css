@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap');
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -24,83 +26,82 @@
   --color-green: #006239;
 
   /* --font-*: initial; */
-  --font-Inter: var(--inter);
-  --font-Play: var(--play);
-  --font-OpenSans: var(--openSans);
-  --font-Raleway: var(--raleway);
-  --font-Code: var(--sourceCodePro);
+  --font-OpenSans: "DM Sans", sans-serif;
+
 
   --shadow-3xl: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
 
   /* --text-*: initial; */
-  --text-H1-desktop: 100px;
+  --text-H1-desktop: 48px;
   --text-H1-desktop--line-height: 130%;
-  --text-H2-desktop: 80px;
+  --text-H2-desktop: 36px;
   --text-H2-desktop--line-height: 130%;
-  --text-H3-desktop: 64px;
+  --text-H3-desktop: 24px;
   --text-H3-desktop--line-height: 130%;
-  --text-H4-desktop: 50px;
+  --text-H4-desktop: 20px;
   --text-H4-desktop--line-height: 130%;
-  --text-H5-desktop: 40px;
+  --text-H5-desktop: 16px;
   --text-H5-desktop--line-height: 130%;
-  --text-H6-desktop: 32px;
+  --text-H6-desktop: 14px;
   --text-H6-desktop--line-height: 130%;
-  --text-H7-desktop: 26px;
+  --text-H7-desktop: 12px;
   --text-H7-desktop--line-height: 130%;
-  --text-P-lg-desktop: 32px;
+  --text-P-lg-desktop: 20px;
   --text-P-lg-desktop--line-height: 145%;
-  --text-P-desktop: 26px;
+  --text-P-desktop: 14px;
   --text-P-desktop--line-height: 145%;
-  --text-P-sm-desktop: 20px;
+  --text-P-sm-desktop: 12px;
   --text-P-sm-desktop--line-height: 145%;
-  --text-P-xs-desktop: 16px;
+  --text-P-xs-desktop: 10px;
   --text-P-xs-desktop--line-height: 145%;
 
-  --text-H1-tablet: 76px;
+  --text-H1-tablet: 43px;
   --text-H1-tablet--line-height: 130%;
-  --text-H2-tablet: 50px;
+  --text-H2-tablet: 32px;
   --text-H2-tablet--line-height: 130%;
-  --text-H3-tablet: 40px;
+  --text-H3-tablet: 22px;
   --text-H3-tablet--line-height: 130%;
-  --text-H4-tablet: 34px;
+  --text-H4-tablet: 18px;
   --text-H4-tablet--line-height: 130%;
-  --text-H5-tablet: 28px;
+  --text-H5-tablet: 14px;
   --text-H5-tablet--line-height: 130%;
-  --text-H6-tablet: 24px;
+  --text-H6-tablet: 13px;
   --text-H6-tablet--line-height: 130%;
-  --text-H7-tablet: 20px;
+  --text-H7-tablet: 11px;
   --text-H7-tablet--line-height: 130%;
-  --text-P-lg-tablet: 24px;
+  --text-P-lg-tablet: 18px;
   --text-P-lg-tablet--line-height: 145%;
-  --text-P-tablet: 20px;
+  --text-P-tablet: 13px;
   --text-P-tablet--line-height: 145%;
-  --text-P-sm-tablet: 16px;
+  --text-P-sm-tablet: 11px;
   --text-P-sm-tablet--line-height: 145%;
-  --text-P-xs-tablet: 14px;
+  --text-P-xs-tablet: 9px;
   --text-P-xs-tablet--line-height: 145%;
 
-  --text-H1-mobile: 60px;
+  --text-H1-mobile: 36px;
   --text-H1-mobile--line-height: 130%;
-  --text-H2-mobile: 32px;
+  --text-H2-mobile: 27px;
   --text-H2-mobile--line-height: 130%;
-  --text-H3-mobile: 28px;
+  --text-H3-mobile: 18px;
   --text-H3-mobile--line-height: 130%;
-  --text-H4-mobile: 24px;
+  --text-H4-mobile: 15px;
   --text-H4-mobile--line-height: 130%;
-  --text-H5-mobile: 22px;
+  --text-H5-mobile: 12px;
   --text-H5-mobile--line-height: 130%;
-  --text-H6-mobile: 20px;
+  --text-H6-mobile: 11px;
   --text-H6-mobile--line-height: 130%;
-  --text-H7-mobile: 18px;
+  --text-H7-mobile: 9px;
   --text-H7-mobile--line-height: 130%;
-  --text-P-lg-mobile: 20px;
+  --text-P-lg-mobile: 15px;
   --text-P-lg-mobile--line-height: 145%;
-  --text-P-mobile: 18px;
+  --text-P-mobile: 11px;
   --text-P-mobile--line-height: 145%;
-  --text-P-sm-mobile: 16px;
+  --text-P-sm-mobile: 9px;
   --text-P-sm-mobile--line-height: 145%;
-  --text-P-xs-mobile: 14px;
+  --text-P-xs-mobile: 8px;
   --text-P-xs-mobile--line-height: 145%;
+
+  
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
