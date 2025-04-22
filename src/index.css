@@ -19,9 +19,9 @@
   --color-terciary-gray: #232323;
   --color-white: #DFDFDF;
   --color-secondary-white: #9d9d9d;
-  --color-gray: #747474;
-  --color-border-gray: #363636;
-  --color-hover-gray: #292929;
+  --color-lighter-gray: #747474;
+  --color-gray: #363636;
+  --color-cuartenary-gray: #292929;
   --color-red: #E93544;
   --color-green: #006239;
 
@@ -230,7 +230,7 @@
   --sidebar-foreground: oklch(0.147 0.004 49.25);
   --sidebar-primary: oklch(0.216 0.006 56.043);
   --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
-  --sidebar-accent: var(--color-border-gray);
+  --sidebar-accent: var(--color-gray);
   --sidebar-accent-foreground: var(--color-white);
   --sidebar-border: oklch(0.923 0.003 48.717);
   --sidebar-ring: oklch(0.709 0.01 56.259);
@@ -280,7 +280,7 @@
 }
 
 .table {
-  @apply border border-border-gray rounded-xl;
+  @apply border border-gray rounded-xl;
 }
 
 .table-header {
@@ -296,7 +296,7 @@
 }
 
 .table-attributes div {
-  @apply text-gray flex gap-2.5 items-center;
+  @apply text-lighter-gray flex gap-2.5 items-center;
 }
 
 .nested-table .table-attribute:last-child {
