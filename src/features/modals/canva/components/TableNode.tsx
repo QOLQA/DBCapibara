@@ -19,9 +19,9 @@ const AttributeNode = ({ column }: { column: Column }) => {
 		<div className="table-attribute">
 			<span className="text-white">{column.name}</span>
 			<div>
-				<span className="text-gray">{column.type}</span>
+				<span className="text-lighter-gray">{column.type}</span>
 				<div className="table-attribute__options">
-					<MoreButton className="text-gray" />
+					<MoreButton className="text-lighter-gray" />
 				</div>
 			</div>
 		</div>
@@ -36,7 +36,7 @@ export const TableNode = ({ data }: { data: TableData }) => {
 			{/* table header */}
 			<div className="table-header text-white">
 				<span>{data.label}</span>
-				<MoreButton className="hover:text-gray" />
+				<MoreButton className="hover:text-lighter-gray" />
 			</div>
 			{/* table content */}
 			<div className="table-content">
@@ -46,7 +46,7 @@ export const TableNode = ({ data }: { data: TableData }) => {
 						<React.Fragment key={column.id}>
 							<AttributeNode column={column} />
 							{index < data.columns.length - 1 && (
-								<hr className="border border-border-gray" />
+								<hr className="border border-gray" />
 							)}
 						</React.Fragment>
 					))}

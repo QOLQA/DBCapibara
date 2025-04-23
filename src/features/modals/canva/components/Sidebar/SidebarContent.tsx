@@ -18,9 +18,9 @@ export const SidebarContentPrinc = ({
 	return (
 		<Sidebar
 			collapsible="none"
-			className="hidden flex-1 md:flex bg-hover-gray rounded-2xl p-[36px] text-white	"
+			className="hidden flex-1 md:flex bg-cuartenary-gray rounded-2xl p-[36px] text-white	"
 		>
-			<SidebarHeader className="gap-3.5 border-b border-gray p-4">
+			<SidebarHeader className="gap-3.5 border-b border-lighter-gray p-4">
 				<div className="flex w-full items-center justify-center">
 					<div className="text-base font-medium text-foreground text-white text-h3">
 						{activeItem?.title}
