@@ -37,7 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar
 			collapsible="icon"
-			className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row [&>[data-sidebar=sidebar]]:bg-secondary-gray py-5 bg-secondary-gray"
+			className=" overflow-hidden h-[calc(100vh-3rem)] [&>[data-sidebar=sidebar]]:flex-row [&>[data-sidebar=sidebar]]:bg-secondary-gray py-5 bg-secondary-gray"
 			{...props}
 		>
 			<SidebarIcons
