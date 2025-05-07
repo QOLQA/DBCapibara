@@ -1,7 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -22,8 +22,9 @@
   --color-lighter-gray: #747474;
   --color-gray: #363636;
   --color-cuartenary-gray: #292929;
-  --color-red: #E93544;
+  --color-red: #e93544;
   --color-green: #006239;
+  --color-edge: #4e4e4e;
 
   /* --font-*: initial; */
   --font-OpenSans: "DM Sans", sans-serif;
@@ -279,7 +280,7 @@
 
 /* Styles applied to table nodes */
 .table {
-  @apply border border-gray rounded-xl;
+  @apply border border-gray rounded-xl min-w-72;
 }
 
 .table-header {
