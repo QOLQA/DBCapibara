@@ -8,14 +8,12 @@ import {
 import { LogoWithSelect } from "./LogoWithSelect";
 import type { VersionOption } from "./types";
 
-const title = "Sistema de Compras Online";
-
 const Versions: VersionOption[] = [
 	{ value: "version1", label: "Versión 1" },
 	{ value: "version2", label: "Versión 2" },
 ];
 
-export const AppHeader = () => {
+export const AppHeader = ({ title }: { title: string }) => {
 	return (
 		<header className="flex flex-row items-center justify-between w-full h-16 bg-secondary-gray p-4 text-white">
 			<LogoWithSelect Versions={Versions} />
