@@ -2,12 +2,14 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/features/modals/canva/components/Sidebar/AppSidebar";
 import { AppHeader } from "./components/header/AppHeader";
 
-
-export function LayoutDiagram({ children }: { children: React.ReactNode }) {
+export function LayoutDiagram({
+	children,
+	title,
+}: { children: React.ReactNode; title: string }) {
 	return (
 		<>
 			<div className="flex flex-col h-screen w-screen z-50 overflow-hidden">
-				<AppHeader title="" />
+				<AppHeader title={title} />
 
 				<SidebarProvider
 					className="overflow-hidden h-full w-full"
