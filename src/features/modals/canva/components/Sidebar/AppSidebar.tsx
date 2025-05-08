@@ -1,9 +1,5 @@
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
-import {
-	Calendar,
-	Database,
-	DataPie,
-} from "../../../../../components/icons/sidebar";
+import { Calendar, Database, DataPie } from "@/components/icons/SidebarIcons";
 import { SidebarIcons } from "./SidebarIcons";
 import { useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";

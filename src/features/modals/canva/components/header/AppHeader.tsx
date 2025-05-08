@@ -3,7 +3,7 @@ import {
 	ArrowRight,
 	Chevron,
 	Save,
-} from "@/components/icons/header";
+} from "@/components/icons/HeaderIcons";
 
 import { LogoWithSelect } from "./LogoWithSelect";
 import type { VersionOption } from "./types";

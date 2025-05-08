@@ -1,4 +1,4 @@
-import { Logo } from "@/components/icons/header";
+import { Logo } from "@/components/icons/HeaderIcons";
 import {
 	Select,
 	SelectContent,
