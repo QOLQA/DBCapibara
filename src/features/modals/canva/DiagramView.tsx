@@ -2,7 +2,8 @@ import DatabaseDiagram from "./components/DataBaseDiagram";
 import { LayoutDiagram } from "./LayoutDiagram";
 
 import type { Edge } from "@xyflow/react";
-import type { Route } from "./+types/DiagramView";
+import type { Route } from "./+types/root";
+import { isRouteErrorResponse } from "react-router";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -24,6 +25,30 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 // Placeholder for future action functionality. This function is intentionally left empty.
 export async function action() {}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (isRouteErrorResponse(error)) {
+    return (
+      <>
+        <h1>
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </>
+    );
+  }
+  if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  }
+  return <h1>Unknown Error</h1>;
+}
 
 export default function DiagramView({ loaderData }: Route.ComponentProps) {
   const initialEdges: Edge[] = [];

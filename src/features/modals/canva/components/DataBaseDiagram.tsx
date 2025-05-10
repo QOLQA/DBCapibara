@@ -15,10 +15,21 @@ import { nodeTypes } from "./TableNode";
 import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
+import ShowErrorModal from "./ShowErrorModal";
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
   strokeWidth: 2,
+};
+
+const existsConnection = (sourceTable: TableData, targetTable: TableData) => {
+  const sourceColumns = sourceTable.columns.map((col) => col.name);
+  const targetColumns = targetTable.columns.map((col) => col.name);
+
+  return (
+    sourceColumns.some((col) => col.includes(targetTable.label)) ||
+    targetColumns.some((col) => col.includes(sourceTable.label))
+  );
 };
 
 const DatabaseDiagram = ({
@@ -31,23 +42,31 @@ const DatabaseDiagram = ({
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const onConnect = useCallback(
     (params: Connection) => {
-      const sourceNode = nodes.find((node) => node.id === params.source);
+      const sourceNode = nodes.find(
+        (node) => node.id === params.source
+      ) as Node<TableData>;
       const index = nodes.findIndex((node) => node.id === params.target);
       const targetNode = { ...nodes[index] };
-      const newAttribute = {
-        id: `e-${targetNode?.data.columns}`,
-        name: `${sourceNode?.data.label}_id`,
-        type: "FOREIGN_KEY",
-      };
-      targetNode.data.columns.push(newAttribute);
-      const newNodes = [...nodes];
-      newNodes[index] = targetNode;
-      setNodes(newNodes);
+      if (!existsConnection(sourceNode.data, targetNode.data)) {
+        const newAttribute = {
+          id: `e-${targetNode?.data.columns}`,
+          name: `${sourceNode?.data.label}_id`,
+          type: "FOREIGN_KEY",
+        };
+        targetNode.data.columns.push(newAttribute);
+        const newNodes = [...nodes];
+        newNodes[index] = targetNode;
+        setNodes(newNodes);
 
-      setEdges((eds) => addEdge(params, eds));
+        setEdges((eds) => addEdge(params, eds));
+      } else {
+        setShowError(true);
+        console.log("Ya existe una relación entre estas tablas");
+      }
     },
     [setEdges, nodes, setNodes]
   );
@@ -100,6 +119,13 @@ const DatabaseDiagram = ({
         <AddDocumentModal
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddDocument}
+        />
+      )}
+
+      {showError && (
+        <ShowErrorModal
+          onClose={() => setShowError(false)}
+          errorMessage="Ya existe una relación entre estas tablas"
         />
       )}
     </div>
