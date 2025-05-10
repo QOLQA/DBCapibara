@@ -1,11 +1,7 @@
 import { Sidebar, useSidebar } from "@/components/ui/sidebar";
-import {
-	Calendar,
-	Database,
-	DataPie,
-} from "../../../../../components/icons/sidebar";
+import { Calendar, Database, DataPie } from "@/components/icons/SidebarIcons";
 import { SidebarIcons } from "./SidebarIcons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";
 
 const data = {
@@ -37,7 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar
 			collapsible="icon"
-			className="overflow-hidden [&>[data-sidebar=sidebar]]:flex-row [&>[data-sidebar=sidebar]]:bg-secondary-gray py-5 bg-secondary-gray"
+			className=" overflow-hidden h-full [&>[data-sidebar=sidebar]]:flex-row [&>[data-sidebar=sidebar]]:bg-secondary-gray py-5 bg-secondary-gray"
 			{...props}
 		>
 			<SidebarIcons

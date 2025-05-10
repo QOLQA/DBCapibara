@@ -30,56 +30,54 @@ const AttributeNode = ({ column }: { column: Column }) => {
   );
 };
 
-const DEFAULT_HANDLE_STYLE = {
-  width: 20,
-  height: 20,
+const TableNodeContent = ({ data }: { data: TableData }) => {
+  return (
+    // table
+    <div className="table">
+      {/* table header */}
+      <div className="table-header text-white">
+        <span>{data.label}</span>
+        <MoreButton className="hover:text-lighter-gray" />
+      </div>
+      {/* table content */}
+      <div className="table-content">
+        {/* table attributes */}
+        <div className="table-attributes">
+          {data.columns.map((column, index) => (
+            <React.Fragment key={column.id}>
+              <AttributeNode column={column} />
+              {index < data.columns.length - 1 && (
+                <hr className="border border-gray" />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+        {data.nestedTables && data.nestedTables.length > 0 && (
+          // table nested
+          <div className="table-nesteds">
+            {data.nestedTables.map((nestedTable) => (
+              <TableNodeContent key={nestedTable.label} data={nestedTable} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 
 // Custom node types
 export const TableNode = ({ data }: { data: TableData }) => {
   return (
     // table
-    <>
+    <div className="relative">
+      <Handle className="customHandle" type="target" position={Position.Left} />
       <Handle
-        type="target"
-        position={Position.Bottom}
-        style={{ ...DEFAULT_HANDLE_STYLE }}
-      />
-      <Handle
+        className="customHandle"
         type="source"
-        position={Position.Bottom}
-        style={{ ...DEFAULT_HANDLE_STYLE }}
+        position={Position.Right}
       />
-      <div className="table">
-        {/* table header */}
-        <div className="table-header text-white">
-          <span>{data.label}</span>
-          <MoreButton className="hover:text-lighter-gray" />
-        </div>
-        {/* table content */}
-        <div className="table-content">
-          {/* table attributes */}
-          <div className="table-attributes">
-            {data.columns.map((column, index) => (
-              <React.Fragment key={column.id}>
-                <AttributeNode column={column} />
-                {index < data.columns.length - 1 && (
-                  <hr className="border border-gray" />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-          {data.nestedTables && data.nestedTables.length > 0 && (
-            // table nested
-            <div className="table-nesteds">
-              {data.nestedTables.map((nestedTable) => (
-                <TableNode key={nestedTable.label} data={nestedTable} />
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </>
+      <TableNodeContent data={data} />
+    </div>
   );
 };
 

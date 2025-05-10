@@ -31,6 +31,7 @@ const DatabaseDiagram = ({
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const onConnect = useCallback(
     (params: Connection) => {
       const sourceNode = nodes.find((node) => node.id === params.source);

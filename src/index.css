@@ -338,3 +338,26 @@
 .model__thumbnail-img {
   @apply rounded-t-xl h-full w-full;
 }
+
+/*
+  Styles for the custom connection handles used in the TableNode component.
+
+  - Applies to div elements with the "customHandle" class, which are rendered as connection points (handles) on the sides of the TableNode.
+  - Sets the handle size to 80% of its parent, and centers it absolutely within the parent node.
+  - Removes default border and border-radius for a flat appearance.
+  - Sets the background color to blue, but makes the handle fully transparent (opacity: 0) so it is invisible but still interactive.
+  - Ensures the handle is positioned correctly for user interactions in the node-based canvas.
+*/
+div.customHandle {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color: blue;
+  transform: none;
+  border: none;
+  border-radius: 0;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
