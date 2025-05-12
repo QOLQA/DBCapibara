@@ -16,7 +16,7 @@ export function LayoutDiagram({
 					defaultOpen={false}
 				>
 					<AppSidebar />
-					<SidebarInset className="h-full w-full">
+					<SidebarInset className="h-full w-full !bg-secondary-gray">
 						<div className="h-full w-full overflow-hidden">{children}</div>
 					</SidebarInset>
 				</SidebarProvider>
