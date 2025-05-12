@@ -28,37 +28,33 @@ const AddDocumentModal: React.FC<AddDocumentModalProps> = ({
 	return createPortal(
 		<dialog
 			ref={modalRef}
-			className="bg-white p-6 m-auto rounded-xl shadow-lg w-96 border border-gray-300 backdrop:bg-black/50 backdrop:backdrop-blur-sm open:animate-fade-in"
+			className="bg-primary-gray p-6 m-auto text-white rounded-xl shadow-lg w-96 backdrop:bg-black/50 backdrop:backdrop-blur-sm open:animate-fade-in"
 			onClose={onClose}
 		>
 			<h2 className="text-lg font-semibold mb-4">Nuevo Documento</h2>
-			<input
-				type="text"
-				className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400"
-				placeholder="Nombre del documento"
-				value={docName}
-				onChange={(e) => setDocName(e.target.value)}
-			/>
-			<div className="flex justify-end gap-2 mt-4">
-				<Button
-					type="button"
-					variant={"outline"}
-					className="cursor-pointer"
-					onClick={() => {
-						modalRef.current?.close();
-						onClose();
-					}}
-				>
-					Cancelar
-				</Button>
+			<hr />
+			<div className="mt-4 flex justify-between items-center">
+				<label htmlFor="docName" className="text-sm font-medium">
+					Nombre
+				</label>
+				<input
+					type="text"
+					id="docName"
+					className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400"
+					placeholder="Nombre del documento"
+					value={docName}
+					onChange={(e) => setDocName(e.target.value)}
+				/>
+			</div>
 
+			<div className="flex justify-end gap-2 mt-4">
 				<Button
 					variant={"outline"}
 					type="button"
 					onClick={handleSubmit}
-					className="cursor-pointer"
+					className="cursor-pointer text-white bg-blue border-none hover:bg-blue-dark hover:text-white"
 				>
-					Crear
+					Crear Modelo
 				</Button>
 			</div>
 		</dialog>,
