@@ -1,5 +1,5 @@
 import DatabaseDiagram from "./components/DataBaseDiagram";
-import { LayoutDiagram } from "./components/Sidebar/LayoutDiagram";
+import { LayoutDiagram } from "./LayoutDiagram";
 
 import type { Edge } from "@xyflow/react";
 import type { Route } from "./+types/DiagramView";
@@ -31,14 +31,14 @@ export default function DiagramView({ loaderData }: Route.ComponentProps) {
     { id: "edge1", source: "table1", target: "table2", type: "smoothstep" },
   ];
 
-  return (
-    <>
-      <LayoutDiagram>
-        <DatabaseDiagram
-          initialNodes={loaderData.submodels}
-          initialEdges={initialEdges}
-        />
-      </LayoutDiagram>
-    </>
-  );
+	return (
+		<>
+			<LayoutDiagram title={loaderData.name}>
+				<DatabaseDiagram
+					initialNodes={loaderData.submodels}
+					initialEdges={initialEdges}
+				/>
+			</LayoutDiagram>
+		</>
+	);
 }
