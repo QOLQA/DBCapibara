@@ -65,7 +65,6 @@ const DatabaseDiagram = ({
         setEdges((eds) => addEdge(params, eds));
       } else {
         setShowError(true);
-        console.log("Ya existe una relación entre estas tablas");
       }
     },
     [setEdges, nodes, setNodes]
