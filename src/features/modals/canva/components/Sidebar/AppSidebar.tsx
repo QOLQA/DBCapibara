@@ -5,26 +5,26 @@ import { useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";
 
 const data = {
-	user: {
-		name: "shadcn",
-		email: "m@example.com",
-		avatar: "/user.png",
-	},
-	navMain: [
-		{
-			title: "Database",
-			icon: <Database />,
-			isActive: true,
-		},
-		{
-			title: "Consultas",
-			icon: <Calendar />,
-		},
-		{
-			title: "Estadísticas",
-			icon: <DataPie />,
-		},
-	],
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/user.png",
+  },
+  navMain: [
+    {
+      title: "Database",
+      icon: <Database />,
+      isActive: true,
+    },
+    {
+      title: "Consultas",
+      icon: <Calendar />,
+    },
+    {
+      title: "Estadísticas",
+      icon: <DataPie />,
+    },
+  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
