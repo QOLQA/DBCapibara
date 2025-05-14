@@ -23,7 +23,10 @@
   --color-gray: #363636;
   --color-cuartenary-gray: #292929;
   --color-red: #E93544;
+  --color-red-dark: #8C111D;
   --color-green: #006239;
+  --color-green-dark: #003D24;
+  --color-blue-dark: #00317A;
 
   /* --font-*: initial; */
   --font-OpenSans: "DM Sans", sans-serif;
@@ -336,4 +339,8 @@
 
 .model__thumbnail-img {
   @apply rounded-t-xl h-full w-full;
+}
+
+.controls-with-buttons :where(button) {
+  @apply bg-primary-gray border-none hover:bg-secondary-gray hover:text-white;
 }

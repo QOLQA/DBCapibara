@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/modal";
 import { useState, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
 
 interface AddDocumentModalProps {
 	onClose: () => void;
@@ -25,44 +25,49 @@ const AddDocumentModal: React.FC<AddDocumentModalProps> = ({
 		}
 	};
 
-	return createPortal(
-		<dialog
-			ref={modalRef}
-			className="bg-white p-6 m-auto rounded-xl shadow-lg w-96 border border-gray-300 backdrop:bg-black/50 backdrop:backdrop-blur-sm open:animate-fade-in"
-			onClose={onClose}
-		>
-			<h2 className="text-lg font-semibold mb-4">Nuevo Documento</h2>
-			<input
-				type="text"
-				className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400"
-				placeholder="Nombre del documento"
-				value={docName}
-				onChange={(e) => setDocName(e.target.value)}
-			/>
-			<div className="flex justify-end gap-2 mt-4">
-				<Button
-					type="button"
-					variant={"outline"}
-					className="cursor-pointer"
-					onClick={() => {
-						modalRef.current?.close();
-						onClose();
-					}}
-				>
-					Cancelar
-				</Button>
+	const handleClose = () => {
+		if (modalRef.current) {
+			modalRef.current.close();
+		}
+		onClose();
+	};
 
-				<Button
-					variant={"outline"}
-					type="button"
-					onClick={handleSubmit}
-					className="cursor-pointer"
-				>
-					Crear
-				</Button>
-			</div>
-		</dialog>,
-		document.body,
+	return (
+		<Modal title="Crear Colección" modalRef={modalRef} onClose={handleClose}>
+			<>
+				<div className="my-13 flex justify-between items-center">
+					<label htmlFor="docName" className="text-secondary-white pr-12">
+						Nombre
+					</label>
+					<input
+						type="text"
+						id="docName"
+						className="w-120 py-3 px-5 border border-gray rounded-md bg-terciary-gray focus:ring-2 focus:outline-none"
+						value={docName}
+						onChange={(e) => setDocName(e.target.value)}
+					/>
+				</div>
+
+				<div className="flex justify-end gap-5">
+					<Button
+						variant={"outline"}
+						type="button"
+						onClick={handleClose}
+						className="cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
+					>
+						Cancelar
+					</Button>
+					<Button
+						variant={"outline"}
+						type="button"
+						onClick={handleSubmit}
+						className="cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
+					>
+						Crear Colección
+					</Button>
+				</div>
+			</>
+		</Modal>
 	);
 };
 
