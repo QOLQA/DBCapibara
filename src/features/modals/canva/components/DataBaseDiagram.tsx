@@ -8,12 +8,12 @@ import {
   useEdgesState,
 } from "@xyflow/react";
 import type { Node, Edge } from "@xyflow/react";
-import type { TableData } from "./TableNode";
 
 import { nodeTypes } from "./TableNode";
 import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
+import type { TableData } from "../types";
 
 const DatabaseDiagram = ({
   initialNodes,
@@ -40,31 +40,28 @@ const DatabaseDiagram = ({
     setNodes((prev) => [...prev, newNode]);
   };
 
-	return (
-		<div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
-			<Button
-				type="button"
-				onClick={() => setIsModalOpen(true)}
-				className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
-			>
-				<span className="text-xl">+</span> Nueva Colección
-			</Button>
+  return (
+    <div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
+      <Button
+        type="button"
+        onClick={() => setIsModalOpen(true)}
+        className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
+      >
+        <span className="text-xl">+</span> Nueva Colección
+      </Button>
 
-			<ReactFlow
-				nodes={nodes}
-				edges={edges}
-				onNodesChange={onNodesChange}
-				onEdgesChange={onEdgesChange}
-				nodeTypes={nodeTypes}
-				fitView
-			>
-				<Background className="!bg-terciary-gray rounded-xl" />
-				<Controls className="text-white controls-with-buttons " />
-				<MiniMap
-					nodeClassName="!fill-gray"
-					className="!bg-secondary-gray"
-				/>
-			</ReactFlow>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
+        fitView
+      >
+        <Background className="!bg-terciary-gray rounded-xl" />
+        <Controls className="text-white controls-with-buttons " />
+        <MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
+      </ReactFlow>
 
       {isModalOpen && (
         <AddDocumentModal
