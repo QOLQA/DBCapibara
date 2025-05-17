@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -6,14 +6,33 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
+  addEdge,
+  MarkerType,
 } from "@xyflow/react";
-import type { Node, Edge } from "@xyflow/react";
+import type { Node, Edge, Connection } from "@xyflow/react";
+import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
 import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
-import type { TableData } from "../types";
+import ShowErrorModal from "./ShowErrorModal";
+import { edgeTypes } from "./FloatingEdge";
+
+const connectionLineStyle = {
+  stroke: "#4E4E4E",
+  strokeWidth: 3,
+};
+
+const existsConnection = (sourceTable: TableData, targetTable: TableData) => {
+  const sourceColumns = sourceTable.columns.map((col) => col.name);
+  const targetColumns = targetTable.columns.map((col) => col.name);
+
+  return (
+    sourceColumns.some((col) => col.includes(targetTable.label)) ||
+    targetColumns.some((col) => col.includes(sourceTable.label))
+  );
+};
 
 const DatabaseDiagram = ({
   initialNodes,
@@ -23,8 +42,35 @@ const DatabaseDiagram = ({
   initialEdges: Edge[];
 }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, _, onEdgesChange] = useEdgesState(initialEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const onConnect = useCallback(
+    (params: Connection) => {
+      const sourceNode = nodes.find(
+        (node) => node.id === params.source
+      ) as Node<TableData>;
+      const index = nodes.findIndex((node) => node.id === params.target);
+      const targetNode = { ...nodes[index] };
+      if (!existsConnection(sourceNode.data, targetNode.data)) {
+        const newAttribute = {
+          id: `e-${targetNode?.data.columns}`,
+          name: `${sourceNode?.data.label}_id`,
+          type: "FOREIGN_KEY",
+        };
+        targetNode.data.columns.push(newAttribute);
+        const newNodes = [...nodes];
+        newNodes[index] = targetNode;
+        setNodes(newNodes);
+
+        setEdges((eds) => addEdge(params, eds));
+      } else {
+        setShowError(true);
+      }
+    },
+    [setEdges, nodes, setNodes]
+  );
 
   const handleAddDocument = (name: string) => {
     const newNode: Node<TableData> = {
@@ -41,13 +87,13 @@ const DatabaseDiagram = ({
   };
 
   return (
-    <div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
+    <div className="w-full h-full relative">
       <Button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
+        className="absolute top-2 left-2 bg-black text-white hover:bg-blue-700 z-10 cursor-pointer"
       >
-        <span className="text-xl">+</span> Nueva Colección
+        Agregar Documento
       </Button>
 
       <ReactFlow
@@ -56,17 +102,32 @@ const DatabaseDiagram = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        onConnect={onConnect}
+        connectionLineStyle={connectionLineStyle}
+        defaultEdgeOptions={{
+          type: "floating",
+          style: connectionLineStyle,
+          markerEnd: { type: MarkerType.ArrowClosed },
+        }}
         fitView
       >
-        <Background className="!bg-terciary-gray rounded-xl" />
-        <Controls className="text-white controls-with-buttons " />
-        <MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
+        <Background />
+        <Controls />
+        <MiniMap />
       </ReactFlow>
 
       {isModalOpen && (
         <AddDocumentModal
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddDocument}
+        />
+      )}
+
+      {showError && (
+        <ShowErrorModal
+          onClose={() => setShowError(false)}
+          errorMessage="Ya existe una relación entre estas tablas"
         />
       )}
     </div>

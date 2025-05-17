@@ -1,7 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -23,8 +23,9 @@
   --color-gray: #363636;
   --color-cuartenary-gray: #292929;
   --color-red: #e93544;
-  --color-red-dark: #8c111d;
   --color-green: #006239;
+  --color-edge: #4e4e4e;
+  --color-red-dark: #8c111d;
   --color-green-dark: #003d24;
   --color-blue-dark: #00317a;
 
@@ -282,7 +283,7 @@
 
 /* Styles applied to table nodes */
 .table {
-  @apply border border-gray rounded-xl;
+  @apply border border-gray rounded-xl min-w-72;
 }
 
 .table-header {
@@ -339,6 +340,28 @@
 
 .model__thumbnail-img {
   @apply rounded-t-xl h-full w-full;
+}
+
+/*
+  Styles for the custom connection handles used in the TableNode component.
+
+  - Applies to div elements with the "customHandle" class, which are rendered as connection points (handles) on the sides of the TableNode.
+  - Sets the handle size to 80% of its parent, and centers it absolutely within the parent node.
+  - Removes default border and border-radius for a flat appearance.
+  - Sets the background color to blue, but makes the handle fully transparent (opacity: 0) so it is invisible but still interactive.
+  - Ensures the handle is positioned correctly for user interactions in the node-based canvas.
+*/
+div.customHandle {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: blue;
+  transform: none;
+  border: none;
+  border-radius: 0;
+  opacity: 0;
 }
 
 .controls-with-buttons button {

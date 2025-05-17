@@ -1,5 +1,8 @@
 import React from "react";
 import { MoreButton } from "./MoreButton";
+import { Handle, Position } from "@xyflow/react";
+import type { NodeTypes } from "@xyflow/react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -131,51 +134,21 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
   );
 };
 
-export const TableNode = ({ data, id }: TableNodeProps) => {
-  const { setNodes } = useReactFlow();
-
-  const handleDeleteTable = () => {
-    setNodes((nodes: Node[]) => {
-      return nodes
-        .map((node: Node) => {
-          const findAndRemoveNestedTable = (
-            tables: TableData[] | undefined
-          ): TableData[] | undefined => {
-            if (!tables || tables.length === 0) return tables;
-
-            const filteredTables = tables.filter(
-              (table) => table.label !== data.label
-            );
-
-            if (filteredTables.length < tables.length) {
-              return filteredTables;
-            }
-
-            return filteredTables.map((table) => ({
-              ...table,
-              nestedTables: findAndRemoveNestedTable(table.nestedTables),
-            }));
-          };
-
-          if (node.data.label === data.label) {
-            return null;
-          }
-
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              nestedTables: findAndRemoveNestedTable(
-                node.data.nestedTables as TableData[] | undefined
-              ),
-            },
-          };
-        })
-        .filter(Boolean) as Node[];
-    });
-  };
-
+/**
+ * TableNodeContent component displays the content of a table node,
+ * including its header, attributes, and nested tables.
+ *
+ * Props:
+ * - All properties from TableNodeProps (data: TableData, id: string, etc.)
+ * - handleDeleteTable: function to handle table deletion
+ */
+const TableNodeContent = ({
+  data,
+  id,
+  handleDeleteTable,
+}: TableNodeProps & { handleDeleteTable: () => void }) => {
   return (
+    // table
     <div className="table">
       <div className="table-header text-white">
         <span>{data.label}</span>
@@ -272,7 +245,12 @@ export const TableNode = ({ data, id }: TableNodeProps) => {
           // table nested
           <div className="table-nesteds">
             {data.nestedTables.map((nestedTable) => (
-              <TableNode key={nestedTable.label} data={nestedTable} id={id} />
+              <TableNodeContent
+                key={nestedTable.label}
+                data={nestedTable}
+                handleDeleteTable={handleDeleteTable}
+                id={id}
+              />
             ))}
           </div>
         )}
@@ -281,6 +259,79 @@ export const TableNode = ({ data, id }: TableNodeProps) => {
   );
 };
 
+// Custom node types
+export const TableNode = ({ data, id }: TableNodeProps) => {
+  const { setNodes } = useReactFlow();
+
+  const handleDeleteTable = () => {
+    setNodes((nodes: Node[]) => {
+      return nodes
+        .map((node: Node) => {
+          const findAndRemoveNestedTable = (
+            tables: TableData[] | undefined
+          ): TableData[] | undefined => {
+            if (!tables || tables.length === 0) return tables;
+
+            const filteredTables = tables.filter(
+              (table) => table.label !== data.label
+            );
+
+            if (filteredTables.length < tables.length) {
+              return filteredTables;
+            }
+
+            return filteredTables.map((table) => ({
+              ...table,
+              nestedTables: findAndRemoveNestedTable(table.nestedTables),
+            }));
+          };
+
+          if (node.data.label === data.label) {
+            return null;
+          }
+
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              nestedTables: findAndRemoveNestedTable(
+                node.data.nestedTables as TableData[] | undefined
+              ),
+            },
+          };
+        })
+        .filter(Boolean) as Node[];
+    });
+  };
+
+  return (
+    // table
+    <div className="relative">
+      <Handle
+        className="customHandle"
+        type="target"
+        position={Position.Left}
+        isConnectableStart={false}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          width: "30px",
+          height: "30px",
+          borderRadius: "50%",
+          border: "2px solid #fff",
+        }}
+      />
+      <TableNodeContent
+        data={data}
+        handleDeleteTable={handleDeleteTable}
+        id={id}
+      />
+    </div>
+  );
+};
+
 export const nodeTypes = {
   table: TableNode,
-};
+} satisfies NodeTypes;
