@@ -25,6 +25,9 @@
   --color-red: #e93544;
   --color-green: #006239;
   --color-edge: #4e4e4e;
+  --color-red-dark: #8c111d;
+  --color-green-dark: #003d24;
+  --color-blue-dark: #00317a;
 
   /* --font-*: initial; */
   --font-OpenSans: "DM Sans", sans-serif;
@@ -360,4 +363,8 @@ div.customHandle {
   border-radius: 0;
   transform: translate(-50%, -50%);
   opacity: 0;
+}
+
+.controls-with-buttons button {
+  @apply bg-primary-gray border-none hover:bg-secondary-gray hover:text-white;
 }

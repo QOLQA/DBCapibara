@@ -9,7 +9,7 @@ import {
   addEdge,
 } from "@xyflow/react";
 import type { Node, Edge, Connection } from "@xyflow/react";
-import type { TableData } from "./TableNode";
+import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
 import AddDocumentModal from "./AddDocumentModal";
