@@ -22,11 +22,11 @@
   --color-lighter-gray: #747474;
   --color-gray: #363636;
   --color-cuartenary-gray: #292929;
-  --color-red: #E93544;
-  --color-red-dark: #8C111D;
+  --color-red: #e93544;
+  --color-red-dark: #8c111d;
   --color-green: #006239;
-  --color-green-dark: #003D24;
-  --color-blue-dark: #00317A;
+  --color-green-dark: #003d24;
+  --color-blue-dark: #00317a;
 
   /* --font-*: initial; */
   --font-OpenSans: "DM Sans", sans-serif;
@@ -341,6 +341,6 @@
   @apply rounded-t-xl h-full w-full;
 }
 
-.controls-with-buttons :where(button) {
+.controls-with-buttons button {
   @apply bg-primary-gray border-none hover:bg-secondary-gray hover:text-white;
 }

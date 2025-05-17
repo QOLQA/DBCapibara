@@ -10,24 +10,7 @@ import {
 import { ManagedDropdownMenu } from "@/components/managed-dropdown-menu";
 import type { Node } from "@xyflow/react";
 import { useReactFlow } from "@xyflow/react";
-
-interface Column {
-  id: string;
-  name: string;
-  type: string;
-}
-
-export interface TableData {
-  [key: string]: unknown;
-  label: string;
-  columns: Column[];
-  nestedTables?: TableData[];
-}
-
-interface AttributeNodeProps {
-  column: Column;
-  nodeId: string;
-}
+import type { AttributeNodeProps, TableData, TableNodeProps } from "../types";
 
 const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
   const { setNodes } = useReactFlow();
@@ -37,42 +20,46 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
       return nodes.map((node: Node) => {
         if (node.id === nodeId) {
           const tableData = node.data as TableData;
-          
-          const updateNestedTables = (tables: TableData[] | undefined): TableData[] | undefined => {
+
+          const updateNestedTables = (
+            tables: TableData[] | undefined
+          ): TableData[] | undefined => {
             if (!tables || tables.length === 0) return tables;
-            
-            return tables.map(table => {
-              if (table.columns.some(col => col.id === column.id)) {
+
+            return tables.map((table) => {
+              if (table.columns.some((col) => col.id === column.id)) {
                 return {
                   ...table,
-                  columns: table.columns.filter(col => col.id !== column.id)
+                  columns: table.columns.filter((col) => col.id !== column.id),
                 };
               }
               return {
                 ...table,
-                nestedTables: updateNestedTables(table.nestedTables)
+                nestedTables: updateNestedTables(table.nestedTables),
               };
             });
           };
-          
-          const updatedColumns = tableData.columns.filter(col => col.id !== column.id);
-          
+
+          const updatedColumns = tableData.columns.filter(
+            (col) => col.id !== column.id
+          );
+
           if (updatedColumns.length === tableData.columns.length) {
             return {
               ...node,
               data: {
                 ...tableData,
-                nestedTables: updateNestedTables(tableData.nestedTables)
-              }
+                nestedTables: updateNestedTables(tableData.nestedTables),
+              },
             };
           }
-          
+
           return {
             ...node,
             data: {
               ...tableData,
-              columns: updatedColumns
-            }
+              columns: updatedColumns,
+            },
           };
         }
         return node;
@@ -101,11 +88,7 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
               side="right"
               variant="menu-1"
             >
-              <DropdownMenuItem
-                type="normal"
-                onClick={() => {
-                }}
-              >
+              <DropdownMenuItem type="normal" onClick={() => {}}>
                 <svg
                   width="16"
                   height="16"
@@ -121,7 +104,11 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
                 Editar
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-gray" />
-              <DropdownMenuItem type="delete" className="text-red" onClick={handleDeleteAttribute}>
+              <DropdownMenuItem
+                type="delete"
+                className="text-red"
+                onClick={handleDeleteAttribute}
+              >
                 <svg
                   width="15"
                   height="15"
@@ -144,44 +131,47 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
   );
 };
 
-interface TableNodeProps {
-  data: TableData;
-  id: string;
-}
-
 export const TableNode = ({ data, id }: TableNodeProps) => {
   const { setNodes } = useReactFlow();
 
   const handleDeleteTable = () => {
     setNodes((nodes: Node[]) => {
-      return nodes.map((node: Node) => {
-        const findAndRemoveNestedTable = (tables: TableData[] | undefined): TableData[] | undefined => {
-          if (!tables || tables.length === 0) return tables;
-          
-          const filteredTables = tables.filter(table => table.label !== data.label);
-          
-          if (filteredTables.length < tables.length) {
-            return filteredTables;
+      return nodes
+        .map((node: Node) => {
+          const findAndRemoveNestedTable = (
+            tables: TableData[] | undefined
+          ): TableData[] | undefined => {
+            if (!tables || tables.length === 0) return tables;
+
+            const filteredTables = tables.filter(
+              (table) => table.label !== data.label
+            );
+
+            if (filteredTables.length < tables.length) {
+              return filteredTables;
+            }
+
+            return filteredTables.map((table) => ({
+              ...table,
+              nestedTables: findAndRemoveNestedTable(table.nestedTables),
+            }));
+          };
+
+          if (node.data.label === data.label) {
+            return null;
           }
-          
-          return filteredTables.map(table => ({
-            ...table,
-            nestedTables: findAndRemoveNestedTable(table.nestedTables)
-          }));
-        };
-        
-        if (node.data.label === data.label) {
-          return null;
-        }
-        
-        return {
-          ...node,
-          data: {
-            ...node.data,
-            nestedTables: findAndRemoveNestedTable(node.data.nestedTables as TableData[] | undefined)
-          }
-        };
-      }).filter(Boolean) as Node[];
+
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              nestedTables: findAndRemoveNestedTable(
+                node.data.nestedTables as TableData[] | undefined
+              ),
+            },
+          };
+        })
+        .filter(Boolean) as Node[];
     });
   };
 
@@ -243,7 +233,11 @@ export const TableNode = ({ data, id }: TableNodeProps) => {
               Agregar documentos
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-gray" />
-            <DropdownMenuItem type="delete" className="text-red" onClick={handleDeleteTable}>
+            <DropdownMenuItem
+              type="delete"
+              className="text-red"
+              onClick={handleDeleteTable}
+            >
               <svg
                 width="15"
                 height="15"
