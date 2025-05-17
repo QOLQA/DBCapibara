@@ -1,5 +1,6 @@
+import { useCallback } from "react";
+import { addEdge, type Connection, type Node } from "@xyflow/react";
 import type { TableData } from "@/features/modals/canva/types";
-import type { Node } from "@xyflow/react";
 
 export const existsConnection = (
   sourceTable: TableData,
@@ -20,3 +21,38 @@ interface UseTableConnectionsProps {
   setEdges: (callback: (edges: any) => any) => void;
   onError?: () => void;
 }
+
+export const useTableConnections = ({
+  nodes,
+  setNodes,
+  setEdges,
+  onError,
+}: UseTableConnectionsProps) => {
+  const handleConnect = useCallback(
+    (params: Connection) => {
+      const sourceNode = nodes.find(
+        (node) => node.id === params.source
+      ) as Node<TableData>;
+      const index = nodes.findIndex((node) => node.id === params.target);
+      const targetNode = { ...nodes[index] };
+
+      if (!existsConnection(sourceNode.data, targetNode.data)) {
+        const newAttribute = {
+          id: `e-${targetNode?.data.columns}`,
+          name: `${sourceNode?.data.label}_id`,
+          type: "FOREIGN_KEY",
+        };
+        targetNode.data.columns.push(newAttribute);
+        const newNodes = [...nodes];
+        newNodes[index] = targetNode;
+        setNodes(newNodes);
+        setEdges((eds) => addEdge(params, eds));
+      } else {
+        onError?.();
+      }
+    },
+    [setEdges, nodes, setNodes, onError]
+  );
+
+  return { handleConnect };
+};
