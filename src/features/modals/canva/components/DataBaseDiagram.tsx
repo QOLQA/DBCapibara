@@ -18,20 +18,11 @@ import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
+import { existsConnection } from "@/hooks/use-node-connections";
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
   strokeWidth: 3,
-};
-
-const existsConnection = (sourceTable: TableData, targetTable: TableData) => {
-  const sourceColumns = sourceTable.columns.map((col) => col.name);
-  const targetColumns = targetTable.columns.map((col) => col.name);
-
-  return (
-    sourceColumns.some((col) => col.includes(targetTable.label)) ||
-    targetColumns.some((col) => col.includes(sourceTable.label))
-  );
 };
 
 const DatabaseDiagram = ({
