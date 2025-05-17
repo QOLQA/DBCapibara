@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -6,10 +6,9 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
-  addEdge,
   MarkerType,
 } from "@xyflow/react";
-import type { Node, Edge, Connection } from "@xyflow/react";
+import type { Node, Edge } from "@xyflow/react";
 import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
@@ -18,7 +17,7 @@ import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
-import { existsConnection } from "@/hooks/use-node-connections";
+import { useTableConnections } from "@/hooks/use-node-connections";
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
@@ -37,31 +36,12 @@ const DatabaseDiagram = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const onConnect = useCallback(
-    (params: Connection) => {
-      const sourceNode = nodes.find(
-        (node) => node.id === params.source
-      ) as Node<TableData>;
-      const index = nodes.findIndex((node) => node.id === params.target);
-      const targetNode = { ...nodes[index] };
-      if (!existsConnection(sourceNode.data, targetNode.data)) {
-        const newAttribute = {
-          id: `e-${targetNode?.data.columns}`,
-          name: `${sourceNode?.data.label}_id`,
-          type: "FOREIGN_KEY",
-        };
-        targetNode.data.columns.push(newAttribute);
-        const newNodes = [...nodes];
-        newNodes[index] = targetNode;
-        setNodes(newNodes);
-
-        setEdges((eds) => addEdge(params, eds));
-      } else {
-        setShowError(true);
-      }
-    },
-    [setEdges, nodes, setNodes]
-  );
+  const { handleConnect } = useTableConnections({
+    nodes,
+    setNodes,
+    setEdges,
+    onError: () => setShowError(true),
+  });
 
   const handleAddDocument = (name: string) => {
     const newNode: Node<TableData> = {
@@ -94,7 +74,7 @@ const DatabaseDiagram = ({
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        onConnect={onConnect}
+        onConnect={handleConnect}
         connectionLineStyle={connectionLineStyle}
         defaultEdgeOptions={{
           type: "floating",
