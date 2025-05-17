@@ -7,6 +7,7 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  MarkerType,
 } from "@xyflow/react";
 import type { Node, Edge, Connection } from "@xyflow/react";
 import type { TableData } from "../types";
@@ -16,10 +17,11 @@ import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
+import { edgeTypes } from "./FloatingEdge";
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
-  strokeWidth: 2,
+  strokeWidth: 3,
 };
 
 const existsConnection = (sourceTable: TableData, targetTable: TableData) => {
@@ -100,12 +102,13 @@ const DatabaseDiagram = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onConnect={onConnect}
         connectionLineStyle={connectionLineStyle}
         defaultEdgeOptions={{
-          type: "smoothstep",
-          animated: true,
+          type: "floating",
           style: connectionLineStyle,
+          markerEnd: { type: MarkerType.ArrowClosed },
         }}
         fitView
       >
