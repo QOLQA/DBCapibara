@@ -4,6 +4,7 @@ export type NavItem = {
 	title: string;
 	icon: ReactElement;
 	isActive?: boolean;
+	content?: ReactElement;
 };
 
 export type User = {
