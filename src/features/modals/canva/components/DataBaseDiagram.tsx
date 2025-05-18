@@ -83,9 +83,9 @@ const DatabaseDiagram = ({
         }}
         fitView
       >
-        <Background />
-        <Controls />
-        <MiniMap />
+        <Background className="!bg-terciary-gray rounded-xl" />
+        <Controls className="text-white controls-with-buttons " />
+        <MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
       </ReactFlow>
 
       {isModalOpen && (
