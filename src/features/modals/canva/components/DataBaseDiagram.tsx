@@ -6,14 +6,23 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
+  MarkerType,
 } from "@xyflow/react";
 import type { Node, Edge } from "@xyflow/react";
+import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
 import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
-import type { TableData } from "../types";
+import ShowErrorModal from "./ShowErrorModal";
+import { edgeTypes } from "./FloatingEdge";
+import { useTableConnections } from "@/hooks/use-node-connections";
+
+const connectionLineStyle = {
+  stroke: "#4E4E4E",
+  strokeWidth: 3,
+};
 
 const DatabaseDiagram = ({
   initialNodes,
@@ -23,8 +32,16 @@ const DatabaseDiagram = ({
   initialEdges: Edge[];
 }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, _, onEdgesChange] = useEdgesState(initialEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const { handleConnect } = useTableConnections({
+    nodes,
+    setNodes,
+    setEdges,
+    onError: () => setShowError(true),
+  });
 
   const handleAddDocument = (name: string) => {
     const newNode: Node<TableData> = {
@@ -56,6 +73,14 @@ const DatabaseDiagram = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        onConnect={handleConnect}
+        connectionLineStyle={connectionLineStyle}
+        defaultEdgeOptions={{
+          type: "floating",
+          style: connectionLineStyle,
+          markerEnd: { type: MarkerType.ArrowClosed },
+        }}
         fitView
       >
         <Background className="!bg-terciary-gray rounded-xl" />
@@ -67,6 +92,13 @@ const DatabaseDiagram = ({
         <AddDocumentModal
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleAddDocument}
+        />
+      )}
+
+      {showError && (
+        <ShowErrorModal
+          onClose={() => setShowError(false)}
+          errorMessage="Ya existe una relación entre estas tablas"
         />
       )}
     </div>
