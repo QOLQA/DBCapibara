@@ -58,13 +58,13 @@ const DatabaseDiagram = ({
   };
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
       <Button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="absolute top-2 left-2 bg-black text-white hover:bg-blue-700 z-10 cursor-pointer"
+        className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
       >
-        Agregar Documento
+        <span className="text-xl">+</span> Nueva Colección
       </Button>
 
       <ReactFlow
