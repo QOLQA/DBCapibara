@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { addEdge, type Connection, type Node } from "@xyflow/react";
+import { addEdge, type Edge, type Connection, type Node } from "@xyflow/react";
 import type { TableData } from "@/features/modals/canva/types";
 
 export const existsConnection = (
@@ -17,13 +17,15 @@ export const existsConnection = (
 
 interface UseTableConnectionsProps {
   nodes: Node<TableData>[];
+  edges: Edge[];
   setNodes: (nodes: Node<TableData>[]) => void;
-  setEdges: (callback: (edges: any) => any) => void;
+  setEdges: (edges: Edge[]) => void;
   onError?: () => void;
 }
 
 export const useTableConnections = ({
   nodes,
+  edges,
   setNodes,
   setEdges,
   onError,
@@ -46,12 +48,12 @@ export const useTableConnections = ({
         const newNodes = [...nodes];
         newNodes[index] = targetNode;
         setNodes(newNodes);
-        setEdges((eds) => addEdge(params, eds));
+        setEdges(addEdge(params, edges));
       } else {
         onError?.();
       }
     },
-    [setEdges, nodes, setNodes, onError]
+    [setEdges, nodes, edges, setNodes, onError]
   );
 
   return { handleConnect };
