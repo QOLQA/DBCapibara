@@ -15,6 +15,7 @@ export type CanvasState = {
   setEdges: (edges: Edge[]) => void;
   addNode: (node: Node<TableData>) => void;
   addEdge: (edge: Edge) => void;
+  editNode: (nodeId: string, newNode: Node<TableData>) => void;
   removeNode: (nodeId: string) => void;
   removeEdge: (edgeId: string) => void;
   removeQuery: (queryString: string) => void;
@@ -60,6 +61,14 @@ export const useCanvasStore = create<CanvasState>()(
           state.edges.push(edge);
         });
       },
+      editNode: (nodeId, newNode) => {
+        set((state) => {
+          const index = state.nodes.findIndex((node) => node.id === nodeId);
+          if (index !== -1) {
+            state.nodes[index] = newNode;
+          }
+        });
+      },
       removeNode: (nodeId) => {
         set((state) => {
           state.nodes = state.nodes.filter((n) => n.id !== nodeId);
@@ -76,8 +85,8 @@ export const useCanvasStore = create<CanvasState>()(
         });
       },
       onNodesChange: (changes: NodeChange<Node<TableData>>[]) => {
-        set({
-          nodes: applyNodeChanges<Node<TableData>>(changes, get().nodes),
+        set((state) => {
+          state.nodes = applyNodeChanges<Node<TableData>>(changes, state.nodes);
         });
       },
       onEdgesChange: (changes: EdgeChange[]) => {
@@ -89,6 +98,7 @@ export const useCanvasStore = create<CanvasState>()(
     {
       name: "canvas-storage",
       partialize: (state) => ({
+        id: state.id,
         nodes: state.nodes,
         edges: state.edges,
         queries: state.queries,
