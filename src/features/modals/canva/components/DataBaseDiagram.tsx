@@ -28,8 +28,8 @@ const selector = (state: CanvasState) => ({
   id: state.id,
   nodes: state.nodes,
   edges: state.edges,
-  setNodes: state.setNodes,
-  setEdges: state.setEdges,
+  editNode: state.editNode,
+  addEdge: state.addEdge,
   onNodesChange: state.onNodesChange,
   onEdgesChange: state.onEdgesChange,
   addNode: state.addNode,
@@ -40,8 +40,8 @@ const DatabaseDiagram = () => {
     nodes,
     edges,
     addNode,
-    setNodes,
-    setEdges,
+    editNode,
+    addEdge,
     onNodesChange,
     onEdgesChange,
   } = useCanvasStore<ReturnType<typeof selector>>(selector, shallow);
@@ -51,13 +51,13 @@ const DatabaseDiagram = () => {
 
   const { handleConnect } = useTableConnections({
     nodes,
-    edges,
-    setNodes,
-    setEdges,
+    editNode,
+    addEdge,
     onError: () => setShowError(true),
   });
 
-  const handleAddDocument = (name: string) => { const newNode: Node<TableData> = { id: `table-${nodes.length + 1}`, position: { x: Math.random() * 400, y: Math.random() * 400 }, data: { label: name,
+  const handleAddDocument = (name: string) => { 
+    const newNode: Node<TableData> = { id: `table-${nodes.length + 1}`, position: { x: Math.random() * 400, y: Math.random() * 400 }, data: { label: name,
         columns: [{ id: `col1${nodes.length + 1}`, name: "id", type: "INT" }],
       },
       type: "table",
