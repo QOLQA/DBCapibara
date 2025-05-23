@@ -1,7 +1,7 @@
 import React from "react";
 import { type Node, useReactFlow } from "@xyflow/react";
 import { ManagedDropdownMenu } from "@/components/managed-dropdown-menu";
-import type { AttributeNodeProps, TableData, TableNodeProps } from "../types";
+import type { AttributeNodeProps, TableData, TableNodeProps, Column } from "../types";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -13,52 +13,62 @@ import { MoreButton } from "./MoreButton";
 const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
   const { setNodes } = useReactFlow();
 
-  const handleDeleteAttribute = () => {
+  const handleDeleteAttribute = (column: Column) => {
     setNodes((nodes: Node[]) => {
       return nodes.map((node: Node) => {
         if (node.id === nodeId) {
           const tableData = node.data as TableData;
-
-          const updateNestedTables = (
-            tables: TableData[] | undefined
-          ): TableData[] | undefined => {
-            if (!tables || tables.length === 0) return tables;
-
-            return tables.map((table) => {
-              if (table.columns.some((col) => col.id === column.id)) {
+          
+          // Recursive function to remove attribute from nested tables
+          const removeAttributeFromNested = (nestedTables: TableData[]): TableData[] => {
+            return nestedTables.map(table => {
+              // Check if the attribute ID contains the ID of this table
+              const hasAttribute = table.columns.some(col => column.id.includes(col.id));
+              
+              if (hasAttribute) {
+                // If we find the attribute in this table, we remove it
                 return {
                   ...table,
-                  columns: table.columns.filter((col) => col.id !== column.id),
+                  columns: table.columns.filter(col => col.id !== column.id)
                 };
               }
-              return {
-                ...table,
-                nestedTables: updateNestedTables(table.nestedTables),
-              };
+              
+              // If the attribute is not in this table, we search in the nested tables
+              if (table.nestedTables && table.nestedTables.length > 0) {
+                return {
+                  ...table,
+                  nestedTables: removeAttributeFromNested(table.nestedTables)
+                };
+              }
+              
+              return table;
             });
           };
 
-          const updatedColumns = tableData.columns.filter(
-            (col) => col.id !== column.id
-          );
-
-          if (updatedColumns.length === tableData.columns.length) {
+          // First we search in the main node columns
+          const foundInMainColumns = tableData.columns.some(col => col.id === column.id);
+          
+          if (foundInMainColumns) {
+            // If the attribute is in the main columns, we remove it
             return {
               ...node,
               data: {
                 ...tableData,
-                nestedTables: updateNestedTables(tableData.nestedTables),
-              },
+                columns: tableData.columns.filter(col => col.id !== column.id)
+              }
             };
           }
-
-          return {
-            ...node,
-            data: {
-              ...tableData,
-              columns: updatedColumns,
-            },
-          };
+          
+          // If the attribute is not in the main columns, we search in the nested tables
+          if (tableData.nestedTables && tableData.nestedTables.length > 0) {
+            return {
+              ...node,
+              data: {
+                ...tableData,
+                nestedTables: removeAttributeFromNested(tableData.nestedTables)
+              }
+            };
+          }
         }
         return node;
       });
@@ -106,7 +116,7 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
               <DropdownMenuItem
                 type="delete"
                 className="text-red"
-                onClick={handleDeleteAttribute}
+                onClick={() => handleDeleteAttribute(column)}
               >
                 <svg
                   width="15"
@@ -142,8 +152,48 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
 export const TableNodeContent = ({
   data,
   id,
-  handleDeleteTable,
-}: TableNodeProps & { handleDeleteTable: () => void }) => {
+}: TableNodeProps ) => {
+  const { setNodes } = useReactFlow();
+
+  const handleDeleteTable = (tableId: string) => {
+    setNodes((nodes: Node[]) => {
+      return nodes.map((node: Node) => {
+        if (node.id === id) {
+          const tableData = node.data as TableData;
+
+          // Recursive function to remove table from nested tables
+          const removeTableFromNested = (nestedTables: TableData[]): TableData[] => {
+            return nestedTables.filter(table => {
+              // If this is the table we want to delete, filter it out
+              if (table.id === tableId) {
+                return false;
+              }
+              
+              // If this table has nested tables, search in them
+              if (table.nestedTables && table.nestedTables.length > 0) {
+                table.nestedTables = removeTableFromNested(table.nestedTables);
+              }
+              
+              return true;
+            });
+          };
+
+          // If the table to delete is in the main node's nested tables
+          if (tableData.nestedTables && tableData.nestedTables.length > 0) {
+            return {
+              ...node,
+              data: {
+                ...tableData,
+                nestedTables: removeTableFromNested(tableData.nestedTables)
+              }
+            };
+          }
+        }
+        return node;
+      });
+    });
+  };
+
   return (
     // table
     <div className="table">
@@ -209,7 +259,7 @@ export const TableNodeContent = ({
             <DropdownMenuItem
               type="delete"
               className="text-red"
-              onClick={handleDeleteTable}
+              onClick={() => handleDeleteTable(data.id as string)}
             >
               <svg
                 width="15"
@@ -249,7 +299,6 @@ export const TableNodeContent = ({
               <TableNodeContent
                 key={nestedTable.label}
                 data={nestedTable}
-                handleDeleteTable={handleDeleteTable}
                 id={id}
               />
             ))}
