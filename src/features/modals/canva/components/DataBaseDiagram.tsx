@@ -17,7 +17,7 @@ import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
 import { type CanvasState, useCanvasStore } from "@/state/canvaStore";
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/shallow';
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
@@ -44,7 +44,8 @@ const DatabaseDiagram = () => {
     addEdge,
     onNodesChange,
     onEdgesChange,
-  } = useCanvasStore<ReturnType<typeof selector>>(selector, shallow);
+  } = useCanvasStore<ReturnType<typeof selector>>(useShallow(selector));
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showError, setShowError] = useState(false);
