@@ -21,6 +21,8 @@ export type CanvasState = {
   removeQuery: (queryString: string) => void;
   onNodesChange: (changes: NodeChange<Node<TableData>>[]) => void;
   onEdgesChange: (changes: EdgeChange[]) => void;
+  _hasHydrated: boolean;
+  setHasHydrated: (hasHydrated: boolean) => void;
 };
 
 
@@ -94,6 +96,8 @@ export const useCanvasStore = create<CanvasState>()(
           edges: applyEdgeChanges(changes, get().edges),
         });
       },
+      _hasHydrated: false,
+      setHasHydrated: (hasHydrated) => set({ _hasHydrated: hasHydrated }),
     })),
     {
       name: "canvas-storage",
@@ -103,6 +107,9 @@ export const useCanvasStore = create<CanvasState>()(
         edges: state.edges,
         queries: state.queries,
       }),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );
