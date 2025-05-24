@@ -18,6 +18,7 @@ import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
 import { type CanvasState, useCanvasStore } from "@/state/canvaStore";
 import { useShallow } from 'zustand/shallow';
+import { useUniqueId } from "@/hooks/use-unique-id";
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
@@ -49,6 +50,7 @@ const DatabaseDiagram = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showError, setShowError] = useState(false);
+  const generateId = useUniqueId();
 
   const { handleConnect } = useTableConnections({
     nodes,
@@ -58,8 +60,17 @@ const DatabaseDiagram = () => {
   });
 
   const handleAddDocument = (name: string) => { 
-    const newNode: Node<TableData> = { id: `table-${nodes.length + 1}`, position: { x: Math.random() * 400, y: Math.random() * 400 }, data: { label: name,
-        columns: [{ id: `col1${nodes.length + 1}`, name: "id", type: "INT" }],
+    const newIdNode = generateId();
+    console.log("New Node ID:", newIdNode);
+
+    const newNode: Node<TableData> = 
+    { 
+      id: newIdNode,
+      position: { x: Math.random() * 400, y: Math.random() * 400 }, 
+      data: {
+        id: newIdNode,
+        label: name,
+        columns: [{ id: `${newIdNode}-${generateId()}`, name: "id", type: "INT" }],
       },
       type: "table",
     };
