@@ -6,6 +6,7 @@ export interface Column {
 
 export interface TableData {
   [key: string]: unknown;
+  id: string;
   label: string;
   columns: Column[];
   nestedTables?: TableData[];
@@ -13,7 +14,7 @@ export interface TableData {
 
 export interface AttributeNodeProps {
   column: Column;
-  nodeId: string;
+  columnId: string;
 }
 
 export interface TableNodeProps {

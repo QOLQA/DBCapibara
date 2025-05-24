@@ -3,6 +3,7 @@ import type {
   EdgeBackend,
   NestedNode,
   NodeBackend,
+  Query,
   SolutionModel,
   TableData,
 } from "@/features/modals/canva/types";
@@ -19,6 +20,8 @@ export function transformSolutionModel(solution: SolutionModel): {
   name: string;
   initialNodes: Node<TableData>[];
   initialEdges: EdgeBackend[];
+  queries: Query[];
+  solutionId: string;
 } {
   /**
    * Maps a NodeBackend or NestedNode to a Node<TableData> object.
@@ -63,10 +66,14 @@ export function transformSolutionModel(solution: SolutionModel): {
   );
 
   const initialEdges = solution.submodels.flatMap((submodel) => submodel.edges);
+  const queries = solution.queries
+
 
   return {
     name: solution.name,
     initialNodes,
     initialEdges,
+    queries,
+    solutionId: solution._id,
   };
 }

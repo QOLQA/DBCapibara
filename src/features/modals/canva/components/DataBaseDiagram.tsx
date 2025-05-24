@@ -4,11 +4,9 @@ import {
   Background,
   Controls,
   MiniMap,
-  useNodesState,
-  useEdgesState,
   MarkerType,
 } from "@xyflow/react";
-import type { Node, Edge } from "@xyflow/react";
+import type { Node } from "@xyflow/react";
 import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
@@ -18,43 +16,55 @@ import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
+import { type CanvasState, useCanvasStore } from "@/state/canvaStore";
+import { useShallow } from 'zustand/shallow';
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
   strokeWidth: 3,
 };
 
-const DatabaseDiagram = ({
-  initialNodes,
-  initialEdges,
-}: {
-  initialNodes: Node<TableData>[];
-  initialEdges: Edge[];
-}) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+const selector = (state: CanvasState) => ({
+  id: state.id,
+  nodes: state.nodes,
+  edges: state.edges,
+  editNode: state.editNode,
+  addEdge: state.addEdge,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  addNode: state.addNode,
+});
+
+const DatabaseDiagram = () => {
+  const {
+    nodes,
+    edges,
+    addNode,
+    editNode,
+    addEdge,
+    onNodesChange,
+    onEdgesChange,
+  } = useCanvasStore<ReturnType<typeof selector>>(useShallow(selector));
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showError, setShowError] = useState(false);
 
   const { handleConnect } = useTableConnections({
     nodes,
-    setNodes,
-    setEdges,
+    editNode,
+    addEdge,
     onError: () => setShowError(true),
   });
 
-  const handleAddDocument = (name: string) => {
-    const newNode: Node<TableData> = {
-      id: `table-${nodes.length + 1}`,
-      position: { x: Math.random() * 400, y: Math.random() * 400 },
-      data: {
-        label: name,
+  const handleAddDocument = (name: string) => { 
+    const newNode: Node<TableData> = { id: `table-${nodes.length + 1}`, position: { x: Math.random() * 400, y: Math.random() * 400 }, data: { label: name,
         columns: [{ id: `col1${nodes.length + 1}`, name: "id", type: "INT" }],
       },
       type: "table",
     };
 
-    setNodes((prev) => [...prev, newNode]);
+    addNode(newNode);
   };
 
   return (
