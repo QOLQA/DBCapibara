@@ -1,5 +1,5 @@
 import React from "react";
-import { type Node, useReactFlow } from "@xyflow/react";
+import type { Node } from "@xyflow/react";
 import { ManagedDropdownMenu } from "@/components/managed-dropdown-menu";
 import type { AttributeNodeProps, TableData, TableNodeProps, Column } from "../types";
 import {
@@ -9,71 +9,69 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreButton } from "./MoreButton";
+import { useCanvasStore } from "@/state/canvaStore";
+import getKeySegment from "@/lib/getKeySegment";
 
-const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
-  const { setNodes } = useReactFlow();
+const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
+
+  const { nodes, editNode } = useCanvasStore.getState();
 
   const handleDeleteAttribute = (column: Column) => {
-    setNodes((nodes: Node[]) => {
-      return nodes.map((node: Node) => {
-        if (node.id === nodeId) {
-          const tableData = node.data as TableData;
-          
-          // Recursive function to remove attribute from nested tables
-          const removeAttributeFromNested = (nestedTables: TableData[]): TableData[] => {
-            return nestedTables.map(table => {
-              // Check if the attribute ID contains the ID of this table
-              const hasAttribute = table.columns.some(col => column.id.includes(col.id));
-              
-              if (hasAttribute) {
-                // If we find the attribute in this table, we remove it
-                return {
-                  ...table,
-                  columns: table.columns.filter(col => col.id !== column.id)
-                };
-              }
-              
-              // If the attribute is not in this table, we search in the nested tables
-              if (table.nestedTables && table.nestedTables.length > 0) {
-                return {
-                  ...table,
-                  nestedTables: removeAttributeFromNested(table.nestedTables)
-                };
-              }
-              
-              return table;
-            });
-          };
+    const numLayers = columnId.split("-").length;
 
-          // First we search in the main node columns
-          const foundInMainColumns = tableData.columns.some(col => col.id === column.id);
-          
-          if (foundInMainColumns) {
-            // If the attribute is in the main columns, we remove it
-            return {
-              ...node,
-              data: {
-                ...tableData,
-                columns: tableData.columns.filter(col => col.id !== column.id)
-              }
-            };
-          }
-          
-          // If the attribute is not in the main columns, we search in the nested tables
-          if (tableData.nestedTables && tableData.nestedTables.length > 0) {
-            return {
-              ...node,
-              data: {
-                ...tableData,
-                nestedTables: removeAttributeFromNested(tableData.nestedTables)
-              }
-            };
-          }
-        }
-        return node;
-      });
-    });
-  };
+    // Get the root node (top-level) from the global nodes state
+    const rootId = getKeySegment(columnId, 1);
+    const originalNode = nodes.find(
+      (node) => node.id === rootId
+    ) as Node<TableData>;
+    if (!originalNode) return;
+
+    // Create a deep copy of the node to safely modify it
+    let editableNode: Node<TableData>;
+    try {
+      editableNode = structuredClone(originalNode);
+    } catch (error) {
+      console.error("Error cloning node:", error);
+      return;
+    }
+
+    // If the table is at the first nested level, delete the column directly
+    if (numLayers === 2) {
+      editableNode.data.columns = editableNode.data.columns.filter(
+        (col) => col.id !== column.id
+      );
+      editNode(editableNode.id, editableNode);
+      return;
+    }
+
+    // Recursive function to navigate and delete the column from deeper nested tables
+    const recursiveDeleteColumn = (
+      nestedTables: TableData,
+      layer: number
+    ): TableData => {
+      if (layer === numLayers - 1) {
+        nestedTables.columns = nestedTables.columns.filter(
+          (col) => col.id !== column.id
+        );
+        return nestedTables;
+      }
+
+      const nestedTableResultId = getKeySegment(columnId, layer + 1);
+      const nestedTableResult = nestedTables.nestedTables?.map((nestedTable) =>
+        nestedTable.id === nestedTableResultId
+          ? recursiveDeleteColumn(nestedTable, layer + 1)
+          : nestedTable
+      ) as TableData[];
+
+      return {
+        ...nestedTables,
+        nestedTables: nestedTableResult,
+      };
+    };
+
+    editableNode.data = recursiveDeleteColumn(editableNode.data, 1);
+    editNode(rootId as string, editableNode);
+  }; 
 
   return (
     <div className="table-attribute">
@@ -87,7 +85,6 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
                 className="text-lighter-gray "
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log("Trigger clicked");
                 }}
               />
             </DropdownMenuTrigger>
@@ -146,52 +143,69 @@ const AttributeNode = ({ column, nodeId }: AttributeNodeProps) => {
  * including its header, attributes, and nested tables.
  *
  * Props:
- * - All properties from TableNodeProps (data: TableData, id: string, etc.)
+ * - All properties from TableNodeProps (data: TableData, id: string)
  * - handleDeleteTable: function to handle table deletion
  */
 export const TableNodeContent = ({
   data,
-  id,
+  id
 }: TableNodeProps ) => {
-  const { setNodes } = useReactFlow();
+
+  const { nodes, editNode, removeNode } =
+		useCanvasStore.getState();
 
   const handleDeleteTable = (tableId: string) => {
-    setNodes((nodes: Node[]) => {
-      return nodes.map((node: Node) => {
-        if (node.id === id) {
-          const tableData = node.data as TableData;
+    const numLayers = tableId.split("-").length;
 
-          // Recursive function to remove table from nested tables
-          const removeTableFromNested = (nestedTables: TableData[]): TableData[] => {
-            return nestedTables.filter(table => {
-              // If this is the table we want to delete, filter it out
-              if (table.id === tableId) {
-                return false;
-              }
-              
-              // If this table has nested tables, search in them
-              if (table.nestedTables && table.nestedTables.length > 0) {
-                table.nestedTables = removeTableFromNested(table.nestedTables);
-              }
-              
-              return true;
-            });
-          };
+    // Get the root node (top-level) from the global nodes state
+    const rootId = getKeySegment(tableId, 1);
+    const originalNode = nodes.find(
+      (node) => node.id === rootId
+    ) as Node<TableData>;
+    if (!originalNode) return;
 
-          // If the table to delete is in the main node's nested tables
-          if (tableData.nestedTables && tableData.nestedTables.length > 0) {
-            return {
-              ...node,
-              data: {
-                ...tableData,
-                nestedTables: removeTableFromNested(tableData.nestedTables)
-              }
-            };
-          }
-        }
-        return node;
-      });
-    });
+    // Create a deep copy of the node to safely modify it
+    let editableNode: Node<TableData>;
+    try {
+      editableNode = structuredClone(originalNode);
+    } catch (error) {
+      console.error("Error cloning node:", error);
+      return;
+    }
+
+    // If the table is at the first nested level, delete the table directly
+    if (numLayers === 1) {
+      removeNode(tableId);
+      return;
+    }
+
+    // Recursive function to navigate and delete the nestedTable from deeper nested tables
+    const recursiveDeleteTable = (
+      nestedTables: TableData,
+      layer: number
+    ): TableData => {
+      if (layer === numLayers - 1) {
+        nestedTables.nestedTables = nestedTables.nestedTables?.filter(
+          (nestedTable) => nestedTable.id !== tableId
+        );
+        return nestedTables;
+      }
+
+      const nestedTableResultId = getKeySegment(tableId, layer + 1);
+      const nestedTableResult = nestedTables.nestedTables?.map((nestedTable) =>
+        nestedTable.id === nestedTableResultId
+          ? recursiveDeleteTable(nestedTable, layer + 1)
+          : nestedTable
+      ) as TableData[];
+
+      return {
+        ...nestedTables,
+        nestedTables: nestedTableResult,
+      }; 
+    };
+
+    editableNode.data = recursiveDeleteTable(editableNode.data, 1);
+    editNode(rootId as string, editableNode);
   };
 
   return (
@@ -259,7 +273,7 @@ export const TableNodeContent = ({
             <DropdownMenuItem
               type="delete"
               className="text-red"
-              onClick={() => handleDeleteTable(data.id as string)}
+              onClick={() => handleDeleteTable(id as string)}
             >
               <svg
                 width="15"
@@ -285,7 +299,7 @@ export const TableNodeContent = ({
         <div className="table-attributes">
           {data.columns.map((column, index) => (
             <React.Fragment key={column.id}>
-              <AttributeNode column={column} nodeId={id} />
+              <AttributeNode column={column} columnId={column.id} />
               {index < data.columns.length - 1 && (
                 <hr className="border border-gray" />
               )}
@@ -299,7 +313,7 @@ export const TableNodeContent = ({
               <TableNodeContent
                 key={nestedTable.label}
                 data={nestedTable}
-                id={id}
+                id={nestedTable.id}
               />
             ))}
           </div>
