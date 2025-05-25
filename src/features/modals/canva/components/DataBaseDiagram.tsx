@@ -60,7 +60,6 @@ const DatabaseDiagram = () => {
 
 	const handleAddDocument = (name: string) => {
 		const newIdNode = generateId();
-		console.log("New Node ID:", newIdNode);
 
 		const newNode: Node<TableData> = {
 			id: newIdNode,
