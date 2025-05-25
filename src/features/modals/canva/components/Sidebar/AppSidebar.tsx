@@ -4,6 +4,7 @@ import { SidebarIcons } from "./SidebarIcons";
 import { useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";
 import { AppQueries } from "../Queries/AppQueries";
+import type { NavItem } from "./types";
 
 const data = {
 	user: {
@@ -30,7 +31,7 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const [activeItem, setActiveItem] = useState(data.navMain[0]);
+	const [activeItem, setActiveItem] = useState<NavItem>(data.navMain[0]);
 	const { setOpen } = useSidebar();
 	return (
 		<Sidebar

@@ -25,9 +25,11 @@ export const SidebarContentPrinc = ({
 					</div>
 				</div>
 			</SidebarHeader>
-			<SidebarGroupContent>
-				<SidebarGroup className="px-0">
-					<SidebarGroupContent>{activeItem?.content}</SidebarGroupContent>
+			<SidebarGroupContent className="h-full overflow-hidden rounded-2xl">
+				<SidebarGroup className="px-0 h-full">
+					<SidebarGroupContent className="h-full">
+						{activeItem?.content}
+					</SidebarGroupContent>
 				</SidebarGroup>
 			</SidebarGroupContent>
 		</Sidebar>
