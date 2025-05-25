@@ -2,12 +2,19 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { useRef, useState, type RefObject } from "react";
 import { ModalSelectDocs } from "./ModalSelectDocs";
+import type { Query } from "../../types";
 
 type ModalProps = {
 	modalRef: RefObject<HTMLDialogElement | null>;
+	queryEdit?: Query;
+	mode: "create" | "edit";
 };
 
-export const ModalNewQuery = ({ modalRef }: ModalProps) => {
+export const ModalNewQuery = ({
+	modalRef,
+	mode = "create",
+	queryEdit,
+}: ModalProps) => {
 	const nextModalRef = useRef<HTMLDialogElement>(null);
 
 	const handleClose = () => {
@@ -21,6 +28,9 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 	};
 
 	const [newQuery, setNewQuery] = useState("");
+	if (mode === "edit") {
+		setNewQuery(queryEdit?.full_query || "");
+	}
 
 	return (
 		<>
@@ -65,7 +75,9 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 			<ModalSelectDocs
 				nextModalRef={nextModalRef}
 				modalRef={modalRef}
-				newQuery={newQuery}
+				queryText={newQuery}
+				queryEdit={queryEdit}
+				mode={mode}
 				setNewQuery={setNewQuery}
 			/>
 		</>

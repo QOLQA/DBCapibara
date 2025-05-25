@@ -17,7 +17,7 @@ export const BtnNewQuery = () => {
 				</div>
 			</button>
 
-			<ModalNewQuery modalRef={modalRef} />
+			<ModalNewQuery modalRef={modalRef} mode="create"/>
 		</>
 	);
 };
