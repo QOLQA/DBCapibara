@@ -12,6 +12,7 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 
 	const handleClose = () => {
 		modalRef.current?.close();
+		setNewQuery("");
 	};
 
 	const handleSubmit = () => {
@@ -37,7 +38,7 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 							id="docName"
 							value={newQuery}
 							onChange={(e) => setNewQuery(e.target.value)}
-							className="text-h4 w-160 h-36 py-3 px-5 border border-gray rounded-md bg-terciary-gray focus:ring-2 focus:outline-none"
+							className="text-h4 w-160 h-36 py-3 px-5 border border-gray rounded-md bg-terciary-gray focus:outline-none"
 						/>
 					</div>
 
@@ -63,6 +64,7 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 			</Modal>
 			<ModalSelectDocs
 				nextModalRef={nextModalRef}
+				modalRef={modalRef}
 				newQuery={newQuery}
 				setNewQuery={setNewQuery}
 			/>

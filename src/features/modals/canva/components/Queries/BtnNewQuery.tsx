@@ -10,9 +10,9 @@ export const BtnNewQuery = () => {
 				onClick={() => {
 					if (modalRef.current) modalRef.current.showModal();
 				}}
-				className="w-full h-auto py-4 flex justify-center rounded-xl items-center border group border-dashed border-lighter-gray bg-transparent text-lighter-gray hover:cursor-pointer hover:border-white hover:text-white"
+				className="w-full h-auto py-4 flex justify-center rounded-xl items-center border border-dashed border-lighter-gray bg-transparent text-lighter-gray"
 			>
-				<div className="py-1.5 px-5 border border-lighter-gray bg-transparent rounded-lg text-h5 group-hover:border-white group-hover:text-whitea ">
+				<div className="py-1.5 px-5 border border-lighter-gray bg-transparent rounded-lg text-h5 hover:bg-lighter-gray hover:text-gray cursor-pointer transition-all duration-500">
 					Agregar Consulta
 				</div>
 			</button>
