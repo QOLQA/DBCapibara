@@ -13,7 +13,6 @@ type SidebarContentPrincProps = {
 
 export const SidebarContentPrinc = ({
 	activeItem,
-	data,
 }: SidebarContentPrincProps) => {
 	return (
 		<Sidebar
