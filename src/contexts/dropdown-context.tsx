@@ -1,31 +1,31 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 
 type DropdownContextType = {
-  activeDropdownId: string | null;
-  setActiveDropdown: (id: string | null) => void;
+	activeDropdownId: string | null;
+	setActiveDropdown: (id: string | null) => void;
 };
 
 const DropdownContext = createContext<DropdownContextType>({
-  activeDropdownId: null,
-  setActiveDropdown: () => {},
+	activeDropdownId: null,
+	setActiveDropdown: () => {},
 });
 
 export const DropdownProvider = ({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) => {
-  const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
+	const [activeDropdownId, setActiveDropdownId] = useState<string | null>(null);
 
-  const setActiveDropdown = useCallback((id: string | null) => {
-    setActiveDropdownId(id);
-  }, []);
+	const setActiveDropdown = useCallback((id: string | null) => {
+		setActiveDropdownId(id);
+	}, []);
 
-  return (
-    <DropdownContext.Provider value={{ activeDropdownId, setActiveDropdown }}>
-      {children}
-    </DropdownContext.Provider>
-  );
+	return (
+		<DropdownContext.Provider value={{ activeDropdownId, setActiveDropdown }}>
+			{children}
+		</DropdownContext.Provider>
+	);
 };
 
 export const useDropdownContext = () => useContext(DropdownContext);
