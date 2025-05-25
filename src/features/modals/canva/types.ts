@@ -1,3 +1,5 @@
+import type { Edge, Node } from "@xyflow/react";
+
 export interface Column {
 	id: string;
 	name: string;
@@ -57,9 +59,25 @@ export interface Submodel {
 	edges: EdgeBackend[];
 }
 
+export interface VersionBackend {
+	queries: Query[];
+	submodels: Submodel[];
+	description: string;
+	solution_id: string;
+	_id: string;
+}
+
 export interface SolutionModel {
 	_id: string;
 	name: string;
+	versions: VersionBackend[];
+}
+
+export interface VersionFrontend {
 	queries: Query[];
-	submodels: Submodel[];
+	nodes: Node<TableData>[];
+	edges: Edge[];
+	description: string;
+	solution_id: string;
+	_id: string;
 }
