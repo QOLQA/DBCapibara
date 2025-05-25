@@ -32,6 +32,7 @@ export type CanvasState = {
 	addEdge: (edge: Edge) => void;
 	addQuery: (queries: Query) => void;
 	editNode: (nodeId: string, newNode: Node<TableData>) => void;
+	editQuery: (queryId: string, newQuery: Query) => void;
 	removeNode: (nodeId: string) => void;
 	removeEdge: (edgeId: string) => void;
 	removeQuery: (queryString: string) => void;
@@ -103,6 +104,16 @@ export const useCanvasStore = create<CanvasState>()(
 					}
 				});
 			},
+			editQuery: (queryId, newQuery) => {
+				set((state) => {
+					const index = state.queries.findIndex(
+						(query) => query.id === queryId,
+					);
+					if (index !== -1) {
+						state.queries[index] = newQuery;
+					}
+				});
+			},
 			removeNode: (nodeId) => {
 				set((state) => {
 					state.nodes = state.nodes.filter((n) => n.id !== nodeId);
@@ -116,7 +127,7 @@ export const useCanvasStore = create<CanvasState>()(
 			removeQuery: (queryString) => {
 				set((state) => {
 					state.queries = state.queries.filter(
-						(q) => q.full_query !== queryString
+						(q) => q.full_query !== queryString,
 					);
 				});
 			},
@@ -145,8 +156,8 @@ export const useCanvasStore = create<CanvasState>()(
 			onRehydrateStorage: () => (state) => {
 				state?.setHasHydrated(true);
 			},
-		}
-	)
+		},
+	),
 );
 
 export const canvaSelector = (state: CanvasState) => ({
