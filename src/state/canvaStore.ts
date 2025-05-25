@@ -30,6 +30,7 @@ export type CanvasState = {
 	setSelectedVersionId: (id: string) => void;
 	addNode: (node: Node<TableData>) => void;
 	addEdge: (edge: Edge) => void;
+	addQuery: (queries: Query) => void;
 	editNode: (nodeId: string, newNode: Node<TableData>) => void;
 	removeNode: (nodeId: string) => void;
 	removeEdge: (edgeId: string) => void;
@@ -87,6 +88,11 @@ export const useCanvasStore = create<CanvasState>()(
 			addEdge: (edge) => {
 				set((state) => {
 					state.edges.push(edge);
+				});
+			},
+			addQuery: (query) => {
+				set((state) => {
+					state.queries.push(query);
 				});
 			},
 			editNode: (nodeId, newNode) => {
