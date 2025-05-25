@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { useCanvasStore } from "@/state/canvaStore";
 import { useState, type RefObject } from "react";
+import { ArrowLeft } from "lucide-react";
 
 type ModalProps = {
 	nextModalRef: RefObject<HTMLDialogElement | null>;
+	modalRef: RefObject<HTMLDialogElement | null>;
 	newQuery: string;
 	setNewQuery: (query: string) => void;
 };
@@ -12,6 +14,7 @@ type ModalProps = {
 export const ModalSelectDocs = ({
 	nextModalRef,
 	newQuery,
+	modalRef,
 	setNewQuery,
 }: ModalProps) => {
 	const words = newQuery.trim().split(/\s+/);
@@ -31,6 +34,14 @@ export const ModalSelectDocs = ({
 		if (nextModalRef.current) {
 			nextModalRef.current.close();
 		}
+		setNewQuery("");
+		setSelectedWords([]);
+	};
+
+	const handleReturnModal = () => {
+		setSelectedWords([]);
+		nextModalRef.current?.close();
+		modalRef.current?.showModal();
 	};
 
 	const handleSubmit = () => {
@@ -52,7 +63,7 @@ export const ModalSelectDocs = ({
 	return (
 		<Modal title="Nueva Consulta" modalRef={nextModalRef} onClose={() => {}}>
 			<>
-				<div className="my-13 gap-5 w-160 flex justify-between items-start flex-col">
+				<div className="my-13 gap-5 w-160 flex justify-between items-start flex-col relative">
 					<p className="text-h3 text-secondary-white mb-2">
 						Escoge tus colecciones
 					</p>
@@ -79,6 +90,12 @@ export const ModalSelectDocs = ({
 							Debes seleccionar al menos una palabra.
 						</p>
 					)}
+					<Button
+						onClick={handleReturnModal}
+						className="cursor-pointer absolute top-[-97px] left-0 group transition-all duration-600"
+					>
+						<ArrowLeft className="text-secondary-white group-hover:text-white !w-auto !h-[26px]" />
+					</Button>
 				</div>
 
 				<div className="flex justify-end gap-5">
@@ -96,7 +113,7 @@ export const ModalSelectDocs = ({
 						onClick={handleSubmit}
 						className="cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
 					>
-						Siguiente
+						Crear consulta
 					</Button>
 				</div>
 			</>
