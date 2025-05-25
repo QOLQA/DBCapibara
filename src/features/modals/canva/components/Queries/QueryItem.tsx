@@ -32,7 +32,7 @@ export const QueryItem = ({ query }: { query: Query }) => {
 				))}
 			</div>
 
-			<DropDownQuerys />
+			<DropDownQuerys editQuery={query} />
 		</div>
 	);
 };
