@@ -12,11 +12,11 @@ export const Modal = ({ title, children, modalRef, onClose }: ModalProps) => {
 	return createPortal(
 		<dialog
 			ref={modalRef}
-			className="bg-primary-gray p-12 m-auto text-white text-h3 rounded-xl shadow-lg backdrop:bg-black/50 backdrop:backdrop-blur-sm open:animate-fade-in"
+			className="bg-primary-gray border border-gray p-12 m-auto text-white text-h3 rounded-xl shadow-lg backdrop:bg-black/50 backdrop:backdrop-blur-sm open:animate-fade-in"
 			onClose={onClose}
 		>
 			<h2 className="mb-4 text-center">{title}</h2>
-			<hr />
+			<hr className="border-gray" />
 			{children}
 		</dialog>,
 		document.body,
