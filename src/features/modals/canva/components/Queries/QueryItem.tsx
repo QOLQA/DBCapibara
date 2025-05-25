@@ -9,7 +9,7 @@ const WordSelector = ({ word }: { word: string }) => {
 export const QueryItem = ({ query }: { query: Query }) => {
 	return (
 		<div className="flex flex-col items-start bg-gray w-full p-4 gap-3 rounded-lg relative">
-			<div className="flex items-center justify-center text-center py-2 px-3 w-full bg-cuartenary-gray rounded-lg text-white">
+			<div className="text-center py-2 px-3 w-full bg-cuartenary-gray rounded-lg text-white">
 				{query.full_query.split(" ").map((word, index) => {
 					const key = `${word}-${index}`;
 					if (query.collections.includes(word)) {
