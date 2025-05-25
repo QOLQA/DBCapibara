@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
-import { type CanvasState, useCanvasStore } from "@/state/canvaStore";
+import { canvaSelector, useCanvasStore } from "@/state/canvaStore";
 import { useShallow } from "zustand/shallow";
 import { useUniqueId } from "@/hooks/use-unique-id";
 
@@ -24,17 +24,6 @@ const connectionLineStyle = {
 	stroke: "#4E4E4E",
 	strokeWidth: 3,
 };
-
-const selector = (state: CanvasState) => ({
-	id: state.id,
-	nodes: state.nodes,
-	edges: state.edges,
-	editNode: state.editNode,
-	addEdge: state.addEdge,
-	onNodesChange: state.onNodesChange,
-	onEdgesChange: state.onEdgesChange,
-	addNode: state.addNode,
-});
 
 const DatabaseDiagram = () => {
 	const {
@@ -45,7 +34,9 @@ const DatabaseDiagram = () => {
 		addEdge,
 		onNodesChange,
 		onEdgesChange,
-	} = useCanvasStore<ReturnType<typeof selector>>(useShallow(selector));
+	} = useCanvasStore<ReturnType<typeof canvaSelector>>(
+		useShallow(canvaSelector)
+	);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showError, setShowError] = useState(false);

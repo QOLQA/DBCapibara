@@ -1,7 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type { Query, TableData } from "@/features/modals/canva/types";
+import type {
+	Query,
+	TableData,
+	VersionFrontend,
+} from "@/features/modals/canva/types";
 import {
 	applyEdgeChanges,
 	applyNodeChanges,
@@ -12,6 +16,8 @@ import {
 } from "@xyflow/react";
 
 export type CanvasState = {
+	versions: VersionFrontend[];
+	selectedVersionId: string;
 	nodes: Node<TableData>[];
 	edges: Edge[];
 	queries: Query[];
@@ -20,6 +26,8 @@ export type CanvasState = {
 	setQueries: (queries: Query[]) => void;
 	setNodes: (nodes: Node<TableData>[]) => void;
 	setEdges: (edges: Edge[]) => void;
+	setVersions: (versions: VersionFrontend[]) => void;
+	setSelectedVersionId: (id: string) => void;
 	addNode: (node: Node<TableData>) => void;
 	addEdge: (edge: Edge) => void;
 	addQuery: (queries: Query) => void;
@@ -40,6 +48,13 @@ export const useCanvasStore = create<CanvasState>()(
 			edges: [],
 			queries: [],
 			id: "",
+			versions: [],
+			selectedVersionId: "",
+			setSelectedVersionId: (id) => {
+				set((state) => {
+					state.selectedVersionId = id;
+				});
+			},
 			setId: (id) => {
 				set((state) => {
 					state.id = id;
@@ -58,6 +73,11 @@ export const useCanvasStore = create<CanvasState>()(
 			setEdges: (edges) => {
 				set((state) => {
 					state.edges = edges;
+				});
+			},
+			setVersions: (versions) => {
+				set((state) => {
+					state.versions = versions;
 				});
 			},
 			addNode: (node) => {
@@ -96,7 +116,7 @@ export const useCanvasStore = create<CanvasState>()(
 			removeQuery: (queryString) => {
 				set((state) => {
 					state.queries = state.queries.filter(
-						(q) => q.full_query !== queryString,
+						(q) => q.full_query !== queryString
 					);
 				});
 			},
@@ -120,10 +140,28 @@ export const useCanvasStore = create<CanvasState>()(
 				nodes: state.nodes,
 				edges: state.edges,
 				queries: state.queries,
+				selectedVersionId: state.selectedVersionId,
 			}),
 			onRehydrateStorage: () => (state) => {
 				state?.setHasHydrated(true);
 			},
-		},
-	),
+		}
+	)
 );
+
+export const canvaSelector = (state: CanvasState) => ({
+	id: state.id,
+	nodes: state.nodes,
+	edges: state.edges,
+	editNode: state.editNode,
+	addEdge: state.addEdge,
+	onNodesChange: state.onNodesChange,
+	onEdgesChange: state.onEdgesChange,
+	addNode: state.addNode,
+	versions: state.versions,
+	selectedVersionId: state.selectedVersionId,
+	setSelectedVersionId: state.setSelectedVersionId,
+	setNodes: state.setNodes,
+	setEdges: state.setEdges,
+	setQueries: state.setQueries,
+});
