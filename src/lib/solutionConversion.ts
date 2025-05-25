@@ -1,11 +1,10 @@
 import type { Node } from "@xyflow/react";
 import type {
-	EdgeBackend,
 	NestedNode,
 	NodeBackend,
-	Query,
 	SolutionModel,
 	TableData,
+	VersionFrontend,
 } from "@/features/modals/canva/types";
 
 /**
@@ -18,10 +17,9 @@ import type {
  */
 export function transformSolutionModel(solution: SolutionModel): {
 	name: string;
-	initialNodes: Node<TableData>[];
-	initialEdges: EdgeBackend[];
-	queries: Query[];
+	versions: VersionFrontend[];
 	solutionId: string;
+	last_version_saved: string;
 } {
 	/**
 	 * Maps a NodeBackend or NestedNode to a Node<TableData> object.
@@ -61,18 +59,21 @@ export function transformSolutionModel(solution: SolutionModel): {
 		}));
 	}
 
-	const initialNodes = solution.submodels.flatMap((submodel) =>
-		submodel.nodes.map((node) => mapNode(node)),
-	);
-
-	const initialEdges = solution.submodels.flatMap((submodel) => submodel.edges);
-	const queries = solution.queries;
+	const versions = solution.versions.map((version) => ({
+		queries: version.queries,
+		nodes: version.submodels.flatMap((submodel) =>
+			submodel.nodes.map((node) => mapNode(node))
+		),
+		edges: version.submodels.flatMap((submodel) => submodel.edges),
+		description: version.description,
+		solution_id: version.solution_id,
+		_id: version._id,
+	}));
 
 	return {
 		name: solution.name,
-		initialNodes,
-		initialEdges,
-		queries,
+		versions: versions,
 		solutionId: solution._id,
+		last_version_saved: solution.last_version_saved,
 	};
 }

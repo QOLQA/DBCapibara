@@ -58,19 +58,44 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 }
 
 export default function DiagramView({ loaderData }: Route.ComponentProps) {
-	const { id, setNodes, setEdges, setQueries, setId, _hasHydrated } =
-		useCanvasStore.getState();
+	const {
+		id,
+		setNodes,
+		setEdges,
+		setQueries,
+		setId,
+		setVersions,
+		setSelectedVersionId,
+		_hasHydrated,
+	} = useCanvasStore.getState();
+
+	const versionId = loaderData.versions.findIndex(
+		(version) => loaderData.last_version_saved === version._id
+	);
 
 	useEffect(() => {
 		if (_hasHydrated) {
 			if (id !== loaderData.solutionId) {
 				setId(loaderData.solutionId);
-				setNodes(loaderData.initialNodes);
-				setEdges(loaderData.initialEdges);
-				setQueries(loaderData.queries);
+				setNodes(loaderData.versions[versionId].nodes);
+				setEdges(loaderData.versions[versionId].edges);
+				setQueries(loaderData.versions[versionId].queries);
+				setVersions(loaderData.versions);
+				setSelectedVersionId(loaderData.versions[versionId]._id);
 			}
 		}
-	}, [_hasHydrated, loaderData, setEdges, setId, setNodes, setQueries, id]);
+	}, [
+		_hasHydrated,
+		loaderData,
+		versionId,
+		setEdges,
+		setId,
+		setNodes,
+		setQueries,
+		setVersions,
+		setSelectedVersionId,
+		id,
+	]);
 
 	if (!_hasHydrated) {
 		return null;
