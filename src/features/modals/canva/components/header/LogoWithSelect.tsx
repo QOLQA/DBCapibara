@@ -26,7 +26,7 @@ export const LogoWithSelect = ({ Versions }: { Versions: VersionOption[] }) => {
 						<SelectItem
 							key={version.value}
 							value={version.value}
-							className="border-b-[1px] text-h6 rounded-none !border-cuartenary-gray hover:!bg-gray hover:!text-white focus:!bg-gray focus:!text-white rounded-md"
+							className="border-b-[1px] text-h6 !border-cuartenary-gray hover:!bg-gray hover:!text-white focus:!bg-gray focus:!text-white"
 						>
 							{version.label}
 						</SelectItem>
