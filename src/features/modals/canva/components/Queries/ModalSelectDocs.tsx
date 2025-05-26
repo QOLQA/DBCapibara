@@ -13,7 +13,7 @@ type ModalProps = {
 	queryText: string;
 	queryEdit?: Query;
 	mode: "create" | "edit";
-	setNewQuery: (query: string) => void;
+	setQueryText: (query: string) => void;
 };
 
 export const ModalSelectDocs = ({
@@ -22,7 +22,7 @@ export const ModalSelectDocs = ({
 	queryText,
 	queryEdit,
 	mode,
-	setNewQuery,
+	setQueryText,
 }: ModalProps) => {
 	const words = queryText.trim().split(/\s+/);
 	const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -40,7 +40,7 @@ export const ModalSelectDocs = ({
 
 	const handleClose = () => {
 		nextModalRef.current?.close?.();
-		setNewQuery("");
+		setQueryText("");
 		setSelectedWords([]);
 		setError(false);
 	};
@@ -80,9 +80,9 @@ export const ModalSelectDocs = ({
 					</p>
 
 					<div className="flex flex-wrap gap-3">
-						{words.map((word) => (
+						{words.map((word, index) => (
 							<button
-								key={`word-${word}`}
+								key={`${index}-${word}`}
 								type="button"
 								onClick={() => toggleWord(word)}
 								className={clsx(
