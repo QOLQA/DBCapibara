@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { ModalNewQuery } from "./ModalNewQuery";
 
 export const BtnNewQuery = () => {
 	const modalRef = useRef<HTMLDialogElement>(null);
+	const [queryText, setQueryText] = useState("");
 	return (
 		<>
 			<button
@@ -17,7 +18,12 @@ export const BtnNewQuery = () => {
 				</div>
 			</button>
 
-			<ModalNewQuery modalRef={modalRef} mode="create"/>
+			<ModalNewQuery
+				modalRef={modalRef}
+				mode="create"
+				queryText={queryText}
+				setQueryText={setQueryText}
+			/>
 		</>
 	);
 };
