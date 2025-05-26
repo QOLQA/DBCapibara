@@ -157,6 +157,7 @@ export const useCanvasStore = create<CanvasState>()(
 				edges: state.edges,
 				queries: state.queries,
 				selectedVersionId: state.selectedVersionId,
+				versions: state.versions,
 			}),
 			onRehydrateStorage: () => (state) => {
 				state?.setHasHydrated(true);
