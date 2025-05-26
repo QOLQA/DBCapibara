@@ -28,6 +28,7 @@ export type CanvasState = {
 	setEdges: (edges: Edge[]) => void;
 	setVersions: (versions: VersionFrontend[]) => void;
 	setSelectedVersionId: (id: string) => void;
+	getQueryById: (queryId: string) => Query | undefined;
 	addNode: (node: Node<TableData>) => void;
 	addEdge: (edge: Edge) => void;
 	addQuery: (queries: Query) => void;
@@ -80,6 +81,10 @@ export const useCanvasStore = create<CanvasState>()(
 				set((state) => {
 					state.versions = versions;
 				});
+			},
+			getQueryById: (queryId) => {
+				const query = get().queries.find((q) => q.id === queryId);
+				return query;
 			},
 			addNode: (node) => {
 				set((state) => {
