@@ -25,6 +25,7 @@ export interface TableNodeProps {
 }
 
 export interface Query {
+	id: string;
 	full_query: string;
 	collections: string[];
 }

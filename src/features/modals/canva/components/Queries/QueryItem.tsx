@@ -21,7 +21,7 @@ export const QueryItem = ({ query }: { query: Query }) => {
 			<span className="text-p text-secondary-white">
 				Colecciones involucradas
 			</span>
-			<div className="flex flex-wrap gap-2.5 w-full">
+			<div className="flex flex-wrap gap-2.5 w-full pr-3">
 				{query.collections.map((collection) => (
 					<div
 						key={`${collection}-query`}
@@ -32,7 +32,7 @@ export const QueryItem = ({ query }: { query: Query }) => {
 				))}
 			</div>
 
-			<DropDownQuerys />
+			<DropDownQuerys editQuery={query} />
 		</div>
 	);
 };

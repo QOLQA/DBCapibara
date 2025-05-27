@@ -6,17 +6,21 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreButton } from "../MoreButton";
+import { useRef, useState } from "react";
+import { ModalNewQuery } from "./ModalNewQuery";
+import type { Query } from "../../types";
 
-export const DropDownQuerys = () => {
+export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
+	const modalRef = useRef<HTMLDialogElement>(null);
+	const [queryText, setQueryText] = useState("");
 	return (
-		<div className="absolute bottom-1 right-1">
+		<div className="absolute bottom-1.5 right-[0px]">
 			<ManagedDropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<MoreButton
 						className="text-lighter-gray "
 						onClick={(e) => {
 							e.stopPropagation();
-							console.log("Trigger clicked");
 						}}
 					/>
 				</DropdownMenuTrigger>
@@ -28,7 +32,10 @@ export const DropDownQuerys = () => {
 					<DropdownMenuItem
 						className="hover:!bg-cuartenary-gray"
 						type="normal"
-						onClick={() => {}}
+						onClick={() => {
+							if (modalRef.current) modalRef.current.showModal();
+							setQueryText(editQuery?.full_query || "");
+						}}
 					>
 						<svg
 							width="16"
@@ -67,6 +74,13 @@ export const DropDownQuerys = () => {
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</ManagedDropdownMenu>
+			<ModalNewQuery
+				modalRef={modalRef}
+				mode="edit"
+				queryEdit={editQuery}
+				queryText={queryText}
+				setQueryText={setQueryText}
+			/>
 		</div>
 	);
 };

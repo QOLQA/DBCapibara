@@ -28,10 +28,12 @@ export type CanvasState = {
 	setEdges: (edges: Edge[]) => void;
 	setVersions: (versions: VersionFrontend[]) => void;
 	setSelectedVersionId: (id: string) => void;
+	getQueryById: (queryId: string) => Query | undefined;
 	addNode: (node: Node<TableData>) => void;
 	addEdge: (edge: Edge) => void;
 	addQuery: (queries: Query) => void;
 	editNode: (nodeId: string, newNode: Node<TableData>) => void;
+	editQuery: (queryId: string, newQuery: Query) => void;
 	removeNode: (nodeId: string) => void;
 	removeEdge: (edgeId: string) => void;
 	removeQuery: (queryString: string) => void;
@@ -80,6 +82,10 @@ export const useCanvasStore = create<CanvasState>()(
 					state.versions = versions;
 				});
 			},
+			getQueryById: (queryId) => {
+				const query = get().queries.find((q) => q.id === queryId);
+				return query;
+			},
 			addNode: (node) => {
 				set((state) => {
 					state.nodes.push(node);
@@ -103,6 +109,16 @@ export const useCanvasStore = create<CanvasState>()(
 					}
 				});
 			},
+			editQuery: (queryId, newQuery) => {
+				set((state) => {
+					const index = state.queries.findIndex(
+						(query) => query.id === queryId,
+					);
+					if (index !== -1) {
+						state.queries[index] = newQuery;
+					}
+				});
+			},
 			removeNode: (nodeId) => {
 				set((state) => {
 					state.nodes = state.nodes.filter((n) => n.id !== nodeId);
@@ -116,7 +132,7 @@ export const useCanvasStore = create<CanvasState>()(
 			removeQuery: (queryString) => {
 				set((state) => {
 					state.queries = state.queries.filter(
-						(q) => q.full_query !== queryString
+						(q) => q.full_query !== queryString,
 					);
 				});
 			},
@@ -141,12 +157,13 @@ export const useCanvasStore = create<CanvasState>()(
 				edges: state.edges,
 				queries: state.queries,
 				selectedVersionId: state.selectedVersionId,
+				versions: state.versions,
 			}),
 			onRehydrateStorage: () => (state) => {
 				state?.setHasHydrated(true);
 			},
-		}
-	)
+		},
+	),
 );
 
 export const canvaSelector = (state: CanvasState) => ({

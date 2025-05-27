@@ -1,18 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { ModalSelectDocs } from "./ModalSelectDocs";
+import type { Query } from "../../types";
 
 type ModalProps = {
 	modalRef: RefObject<HTMLDialogElement | null>;
+	queryEdit?: Query;
+	mode: "create" | "edit";
+	queryText: string;
+	setQueryText: (query: string) => void;
 };
 
-export const ModalNewQuery = ({ modalRef }: ModalProps) => {
+export const ModalNewQuery = ({
+	modalRef,
+	mode = "create",
+	queryEdit,
+	queryText,
+	setQueryText,
+}: ModalProps) => {
 	const nextModalRef = useRef<HTMLDialogElement>(null);
 
 	const handleClose = () => {
 		modalRef.current?.close();
-		setNewQuery("");
+		setQueryText("");
 	};
 
 	const handleSubmit = () => {
@@ -20,11 +31,22 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 		nextModalRef.current?.showModal();
 	};
 
-	const [newQuery, setNewQuery] = useState("");
+	useEffect(() => {
+		if (mode === "edit") {
+			setQueryText(queryEdit?.full_query || "");
+		} else {
+			setQueryText("");
+		}
+	}, [queryEdit, mode, setQueryText]);
 
 	return (
 		<>
-			<Modal title="Nueva Consulta" modalRef={modalRef} onClose={() => {}}>
+			<Modal
+				title="Nueva Consulta"
+				modalRef={modalRef}
+				onClose={() => {}}
+				key={queryEdit?.id || "create-modal"}
+			>
 				<>
 					<div className="my-13 gap-5 flex justify-between items-start flex-col">
 						<label
@@ -36,8 +58,8 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 						<textarea
 							placeholder="Escribe tu consulta"
 							id="docName"
-							value={newQuery}
-							onChange={(e) => setNewQuery(e.target.value)}
+							value={queryText}
+							onChange={(e) => setQueryText(e.target.value)}
 							className="text-h4 w-160 h-36 py-3 px-5 border border-gray rounded-md bg-terciary-gray focus:outline-none"
 						/>
 					</div>
@@ -65,8 +87,10 @@ export const ModalNewQuery = ({ modalRef }: ModalProps) => {
 			<ModalSelectDocs
 				nextModalRef={nextModalRef}
 				modalRef={modalRef}
-				newQuery={newQuery}
-				setNewQuery={setNewQuery}
+				queryText={queryText}
+				queryEdit={queryEdit}
+				mode={mode}
+				setQueryText={setQueryText}
 			/>
 		</>
 	);
