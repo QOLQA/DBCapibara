@@ -33,6 +33,7 @@ export function transformSolutionModel(solution: SolutionModel): {
 			position: "position" in node ? node.position : { x: 0, y: 0 },
 			type: "table",
 			data: {
+				id: node.id,
 				label: node.name,
 				columns: node.cols.map((col) => ({
 					id: col.id,
@@ -62,7 +63,7 @@ export function transformSolutionModel(solution: SolutionModel): {
 	const versions = solution.versions.map((version) => ({
 		queries: version.queries,
 		nodes: version.submodels.flatMap((submodel) =>
-			submodel.nodes.map((node) => mapNode(node))
+			submodel.nodes.map((node) => mapNode(node)),
 		),
 		edges: version.submodels.flatMap((submodel) => submodel.edges),
 		description: version.description,
