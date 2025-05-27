@@ -14,7 +14,7 @@ export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
 	const modalRef = useRef<HTMLDialogElement>(null);
 	const [queryText, setQueryText] = useState("");
 	return (
-		<div className="absolute bottom-1.5 right-[-3px]">
+		<div className="absolute bottom-1.5 right-[0px]">
 			<ManagedDropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<MoreButton
