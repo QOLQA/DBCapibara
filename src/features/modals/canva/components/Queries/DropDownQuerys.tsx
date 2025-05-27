@@ -9,10 +9,18 @@ import { MoreButton } from "../MoreButton";
 import { useRef, useState } from "react";
 import { ModalNewQuery } from "./ModalNewQuery";
 import type { Query } from "../../types";
+import { useCanvasStore } from "@/state/canvaStore";
 
 export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
 	const modalRef = useRef<HTMLDialogElement>(null);
 	const [queryText, setQueryText] = useState("");
+
+	const deleteQuery = useCanvasStore((state) => state.removeQuery);
+
+	const handleDelete = () => {
+		deleteQuery(editQuery.id);
+	};
+
 	return (
 		<div className="absolute bottom-1.5 right-[0px]">
 			<ManagedDropdownMenu>
@@ -56,6 +64,7 @@ export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
 					<DropdownMenuItem
 						type="delete"
 						className="text-red hover:!bg-cuartenary-gray"
+						onClick={handleDelete}
 					>
 						<svg
 							width="15"
