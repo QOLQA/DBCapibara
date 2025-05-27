@@ -36,7 +36,7 @@ export type CanvasState = {
 	editQuery: (queryId: string, newQuery: Query) => void;
 	removeNode: (nodeId: string) => void;
 	removeEdge: (edgeId: string) => void;
-	removeQuery: (queryString: string) => void;
+	removeQuery: (queryId: string) => void;
 	onNodesChange: (changes: NodeChange<Node<TableData>>[]) => void;
 	onEdgesChange: (changes: EdgeChange[]) => void;
 	_hasHydrated: boolean;
@@ -129,11 +129,9 @@ export const useCanvasStore = create<CanvasState>()(
 					state.edges = state.edges.filter((e) => e.id !== edgeId);
 				});
 			},
-			removeQuery: (queryString) => {
+			removeQuery: (queryId) => {
 				set((state) => {
-					state.queries = state.queries.filter(
-						(q) => q.full_query !== queryString,
-					);
+					state.queries = state.queries.filter((q) => q.id !== queryId);
 				});
 			},
 			onNodesChange: (changes: NodeChange<Node<TableData>>[]) => {
