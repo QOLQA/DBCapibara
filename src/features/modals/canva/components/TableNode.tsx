@@ -10,47 +10,6 @@ import { TableNodeContent } from "./TableNodeContent";
 export const TableNode = ({ data, id }: TableNodeProps) => {
   const { setNodes } = useReactFlow();
 
-  const handleDeleteTable = () => {
-    setNodes((nodes: Node[]) => {
-      return nodes
-        .map((node: Node) => {
-          const findAndRemoveNestedTable = (
-            tables: TableData[] | undefined
-          ): TableData[] | undefined => {
-            if (!tables || tables.length === 0) return tables;
-
-            const filteredTables = tables.filter(
-              (table) => table.label !== data.label
-            );
-
-            if (filteredTables.length < tables.length) {
-              return filteredTables;
-            }
-
-            return filteredTables.map((table) => ({
-              ...table,
-              nestedTables: findAndRemoveNestedTable(table.nestedTables),
-            }));
-          };
-
-          if (node.data.label === data.label) {
-            return null;
-          }
-
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              nestedTables: findAndRemoveNestedTable(
-                node.data.nestedTables as TableData[] | undefined
-              ),
-            },
-          };
-        })
-        .filter(Boolean) as Node[];
-    });
-  };
-
   return (
     // table
     <div className="relative">
@@ -72,7 +31,6 @@ export const TableNode = ({ data, id }: TableNodeProps) => {
       />
       <TableNodeContent
         data={data}
-        handleDeleteTable={handleDeleteTable}
         id={id}
       />
     </div>

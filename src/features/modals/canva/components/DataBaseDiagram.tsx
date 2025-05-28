@@ -12,12 +12,12 @@ import type { Node, Edge } from "@xyflow/react";
 import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
-import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
+import ModalAddCollection from "./ModalAddCollection";
 
 const connectionLineStyle = {
   stroke: "#4E4E4E",
@@ -33,8 +33,8 @@ const DatabaseDiagram = ({
 }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { handleConnect } = useTableConnections({
     nodes,
@@ -43,13 +43,13 @@ const DatabaseDiagram = ({
     onError: () => setShowError(true),
   });
 
-  const handleAddDocument = (name: string) => {
+  const handleAddCollection = (name: string) => {
     const newNode: Node<TableData> = {
       id: `table-${nodes.length + 1}`,
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: {
         label: name,
-        columns: [{ id: `col1${nodes.length + 1}`, name: "id", type: "INT" }],
+        columns: [{ id: `col1${nodes.length + 1}`, name: `${name}_id`, type: "INT" }],
       },
       type: "table",
     };
@@ -61,12 +61,18 @@ const DatabaseDiagram = ({
     <div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
       <Button
         type="button"
-        onClick={() => setIsModalOpen(true)}
         className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
+        onClick={() => setIsModalOpen(true)}
       >
         <span className="text-xl">+</span> Nueva Colección
       </Button>
-
+      
+      <ModalAddCollection 
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        onSubmit={handleAddCollection}
+      />
+      
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -87,13 +93,6 @@ const DatabaseDiagram = ({
         <Controls className="text-white controls-with-buttons " />
         <MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
       </ReactFlow>
-
-      {isModalOpen && (
-        <AddDocumentModal
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={handleAddDocument}
-        />
-      )}
 
       {showError && (
         <ShowErrorModal
