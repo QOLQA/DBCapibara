@@ -1,4 +1,5 @@
 import type { VersionBackend } from "@/features/modals/canva/types";
+import { loadCanva } from "./loadCanva";
 
 const backendUrl = "http://localhost:8000";
 
@@ -10,7 +11,7 @@ export const saveCanvas = async (
 	const diagramJson = JSON.stringify(diagram, null, 2);
 
 	const url = `${backendUrl}/solutions/${diagramId}/versions/${versionId}`;
-	console.log("Saving diagram to URL:", url);
+
 	try {
 		await fetch(url, {
 			method: "PATCH",
@@ -21,4 +22,6 @@ export const saveCanvas = async (
 		console.error("Error saving canvas:", error);
 		throw new Error("Failed to save canvas");
 	}
+
+	loadCanva(diagramId, versionId);
 };
