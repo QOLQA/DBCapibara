@@ -1,5 +1,4 @@
 import { Save } from "@/components/icons/HeaderIcons";
-import { Button } from "@/components/ui/button";
 import { transformVersionToBackend } from "@/lib/canvaConversion";
 import { saveCanvas } from "@/lib/saveCanvas";
 import { useCanvasStore } from "@/state/canvaStore";
@@ -27,8 +26,8 @@ export const ButtonSave = () => {
 	};
 
 	return (
-		<Button className="group cursor-pointer" onClick={handleSave}>
+		<button type="button" className="group cursor-pointer" onClick={handleSave}>
 			<Save className="text-lighter-gray cursor-pointer group-hover:text-white group-hover:ease-in-out group-hover:duration-300" />
-		</Button>
+		</button>
 	);
 };

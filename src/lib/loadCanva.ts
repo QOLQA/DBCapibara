@@ -27,5 +27,4 @@ export async function loadCanva(diagramId: string, versionId: string) {
 	setEdges(transformed.versions[indexVersion].edges);
 	setQueries(transformed.versions[indexVersion].queries);
 	setVersions(transformed.versions);
-	console.log("Canvas loaded successfully");
 }
