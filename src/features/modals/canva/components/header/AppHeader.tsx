@@ -2,10 +2,10 @@ import {
 	ArrowLeft,
 	ArrowRight,
 	Chevron,
-	Save,
 } from "@/components/icons/HeaderIcons";
 
 import { LogoWithSelect } from "./LogoWithSelect";
+import { ButtonSave } from "./ButtonSave";
 
 export const AppHeader = ({ title }: { title: string }) => {
 	return (
@@ -21,9 +21,7 @@ export const AppHeader = ({ title }: { title: string }) => {
 					<Chevron className="text-white" />
 				</div>
 			</div>
-			<div>
-				<Save className="text-lighter-gray" />
-			</div>
+			<ButtonSave />
 		</header>
 	);
 };

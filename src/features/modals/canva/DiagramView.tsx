@@ -7,6 +7,7 @@ import { useCanvasStore } from "@/state/canvaStore";
 import DatabaseDiagram from "./components/DataBaseDiagram";
 import { LayoutDiagram } from "./LayoutDiagram";
 import { useEffect } from "react";
+import type { VersionFrontend } from "./types";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -70,7 +71,7 @@ export default function DiagramView({ loaderData }: Route.ComponentProps) {
 	} = useCanvasStore.getState();
 
 	const versionId = loaderData.versions.findIndex(
-		(version) => loaderData.last_version_saved === version._id
+		(version: VersionFrontend) => loaderData.last_version_saved === version._id,
 	);
 
 	useEffect(() => {

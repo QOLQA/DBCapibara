@@ -12,23 +12,23 @@ import { useShallow } from "zustand/shallow";
 // components/header/LogoWithSelect.tsx
 export const LogoWithSelect = () => {
 	const {
-		versions: Versions,
+		versions,
 		selectedVersionId,
 		setSelectedVersionId,
 		setNodes,
 		setEdges,
 		setQueries,
 	} = useCanvasStore<ReturnType<typeof canvaSelector>>(
-		useShallow(canvaSelector)
+		useShallow(canvaSelector),
 	);
 
 	const onVersionChange = (newVersionId: string) => {
-		const versionIndex = Versions.findIndex(
-			(version) => version._id === newVersionId
+		const versionIndex = versions.findIndex(
+			(version) => version._id === newVersionId,
 		);
-		setNodes(Versions[versionIndex].nodes);
-		setEdges(Versions[versionIndex].edges);
-		setQueries(Versions[versionIndex].queries);
+		setNodes(versions[versionIndex].nodes);
+		setEdges(versions[versionIndex].edges);
+		setQueries(versions[versionIndex].queries);
 		setSelectedVersionId(newVersionId);
 	};
 
@@ -40,7 +40,7 @@ export const LogoWithSelect = () => {
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent className="!text-white bg-secondary-gray border-gray p-[10px] w-[240px]">
-					{Versions.map((version) => (
+					{versions.map((version) => (
 						<SelectItem
 							key={version._id}
 							value={version._id}
