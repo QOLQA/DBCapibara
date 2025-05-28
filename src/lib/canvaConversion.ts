@@ -32,6 +32,16 @@ function tableDataToNodeBackend(node: Node<TableData>): NodeBackend {
 	};
 }
 
+/**
+ * Transforms a VersionFrontend object into a VersionBackend format.
+ *
+ * - Groups nodes into connected components using DFS over an undirected graph.
+ * - Each connected component is converted into a Submodel.
+ * - Nodes are transformed from TableData (frontend) to NodeBackend (backend).
+ * - Includes all matching edges within each submodel.
+ * - Preserves queries and version metadata.
+ */
+
 export function transformVersionToBackend(
 	version: VersionFrontend,
 	nodes: Node<TableData>[],
@@ -43,7 +53,7 @@ export function transformVersionToBackend(
 		nodeMap.set(node.id, node);
 	}
 
-	// Crear grafo no dirigido
+	// Create undirected graph
 	const adjacencyList = new Map<string, Set<string>>();
 	for (const node of nodes) {
 		adjacencyList.set(node.id, new Set());
@@ -54,7 +64,7 @@ export function transformVersionToBackend(
 		adjacencyList.get(edge.target)?.add(edge.source);
 	}
 
-	// DFS para encontrar componentes conexas
+	// DFS to find connected components
 	const visited = new Set<string>();
 	const components: string[][] = [];
 
@@ -76,7 +86,7 @@ export function transformVersionToBackend(
 		}
 	}
 
-	// Crear submodelos por componente
+	// Create submodels per component
 	const submodels: Submodel[] = components.map((componentNodeIds) => {
 		const submodelNodes: NodeBackend[] = componentNodeIds
 			.map((id) => nodeMap.get(id))
