@@ -150,6 +150,8 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
  * Props:
  * - All properties from TableNodeProps (data: TableData, id: string)
  * - handleDeleteTable: function to handle table deletion
+ * - handleAddAtribute: function to handle attribute addition
+ * - handleAddNestedTable: function to handle nested table addition
  */
 export const TableNodeContent = ({
   data,
@@ -179,13 +181,13 @@ export const TableNodeContent = ({
     };
 
     setNodes((nodes: Node[]) => {
-      return nodes.map((node: Node) => {
+      return nodes?.map((node: Node) => {
         if (node.id === id) {
           const tableData = node.data as TableData;
 
           // Recursive function to add attribute in nested tables
           const addAttributeToNested = (nestedTables: TableData[]): TableData[] => {
-            return nestedTables.map(table => {
+            return nestedTables?.map(table => {
               if (table.id === tableId) {
                 return {
                   ...table,
@@ -239,19 +241,19 @@ export const TableNodeContent = ({
       columns: [{
         id: `${idNestedTableSelected}-${generateRandomId()}`,
         name: `${tableName}_id`,
-        type: "INT"
+        type: "PRIMARY_KEY"
       }],
       nestedTables: []
     };
 
     setNodes((nodes: Node[]) => {
-      return nodes.map((node: Node) => {
+      return nodes?.map((node: Node) => {
         if (node.id === id) {
           const tableData = node.data as TableData;
 
           // Recursive function to add nested table to nested tables
           const addNestedTableToNested = (nestedTables: TableData[]): TableData[] => {
-            return nestedTables.map(table => {
+            return nestedTables?.map(table => {
               if (table.id === idNestedTableSelected) {
                 // If we find the table, add the new nested table
                 return {
@@ -461,9 +463,9 @@ export const TableNodeContent = ({
         <div className="table-content">
           {/* table attributes */}
           <div className="table-attributes">
-            {data.columns.map((column, index) => (
+            {data.columns?.map((column, index) => (
               <React.Fragment key={column.id}>
-                <AttributeNode column={column} nodeId={id} />
+                <AttributeNode column={column} columnId={id} />
                 {index < data.columns.length - 1 && (
                   <hr className="border border-gray" />
                 )}
@@ -473,7 +475,7 @@ export const TableNodeContent = ({
           {data.nestedTables && data.nestedTables.length > 0 && (
             // table nested
             <div className="table-nesteds">
-              {data.nestedTables.map((nestedTable) => (
+              {data.nestedTables?.map((nestedTable) => (
                 <TableNodeContent
                   key={nestedTable.label}
                   data={nestedTable}
@@ -484,10 +486,13 @@ export const TableNodeContent = ({
           )}
         </div>
       </div>
-
-      <ModalDocument open={isModalOpen} setOpen={setIsModalOpen} onSubmit={handleAddNestedTable}></ModalDocument>
-      
+      {isModalOpen && (
+        <ModalDocument 
+          open={isModalOpen} 
+          setOpen={setIsModalOpen} 
+          onSubmit={handleAddNestedTable}
+        />
+      )}
     </>
-    
   );
 };

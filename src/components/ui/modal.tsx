@@ -2,6 +2,8 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import type { ReactElement } from "react";
 import { Button } from "./button";
 
+import { createPortal } from "react-dom";
+
 interface ModalProps {
 	title: string;
 	children: ReactElement;
@@ -11,7 +13,7 @@ interface ModalProps {
 }
 
 export const Modal = ({ title, children, onSubmit, open, setOpen }: ModalProps) => {
-	return (
+	return createPortal(
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-3xl"/>
 			<DialogContent className="w-[730px] bg-primary-gray border-2 border-gray">
@@ -46,6 +48,8 @@ export const Modal = ({ title, children, onSubmit, open, setOpen }: ModalProps) 
           </div>
         </DialogFooter>
 			</DialogContent>
-		</Dialog>
+		</Dialog>,
+		document.body
+
 	);
 };

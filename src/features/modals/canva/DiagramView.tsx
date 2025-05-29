@@ -59,6 +59,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 }
 
 export default function DiagramView({ loaderData }: Route.ComponentProps) {
+	// mostrar la ruta actual
+	console.log("loaderData", loaderData);
 	const {
 		id,
 		setNodes,
