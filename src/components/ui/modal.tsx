@@ -10,9 +10,10 @@ interface ModalProps {
 	onSubmit?: () => void;
 	open: boolean;
 	setOpen: (open: boolean) => void;
+  type?: "create" | "update" | "next" | "save";
 }
 
-export const Modal = ({ title, children, onSubmit, open, setOpen }: ModalProps) => {
+export const Modal = ({ title, children, onSubmit, open, setOpen, type = "create" }: ModalProps) => {
 	return createPortal(
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-3xl"/>
@@ -22,19 +23,25 @@ export const Modal = ({ title, children, onSubmit, open, setOpen }: ModalProps) 
 				</DialogHeader>
 				<div className="w-full h-[2px] bg-gray"></div>
 
-				{children}
+				<div className="my-4">
+          {children}
+        </div>
         
 				<DialogFooter>
           <div className="flex justify-between gap-4">
-            <DialogClose asChild>
-              <Button
-                variant={"outline"}
-                type="button"
-                className="w-[6rem] cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
-              >
-                Cancelar
-              </Button>
-            </DialogClose>
+            {
+              type !== "next" && (
+                <DialogClose asChild>
+                  <Button
+                    variant={"outline"}
+                    type="button"
+                    className="w-[6rem] cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
+                  >
+                    Cancelar
+                  </Button>
+                </DialogClose>
+              )
+            }
             <DialogClose asChild>
               <Button
                 variant={"outline"}
@@ -42,7 +49,7 @@ export const Modal = ({ title, children, onSubmit, open, setOpen }: ModalProps) 
                 onClick={() => onSubmit?.()}
                 className="w-[6rem] cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
               >
-                Crear
+                {type === "create" ? "Crear" : type === "update" ? "Actualizar" : type === "next" ? "Siguiente" : "Guardar"}
               </Button>
             </DialogClose>
           </div>

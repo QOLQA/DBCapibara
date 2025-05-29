@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 
 import { useCanvasStore } from "@/state/canvaStore";
 import getKeySegment from "@/lib/getKeySegment";
+import ModalAtributes from "./ModalAtributes";
 
 const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
 	const { nodes, editNode } = useCanvasStore.getState();
@@ -158,8 +159,8 @@ export const TableNodeContent = ({
   id,
 }: TableNodeProps ) => {
   const { setNodes } = useReactFlow();
-  const [docName, setDocName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
+  const [isAtributesModalOpen, setIsAtributesModalOpen] = useState(false);
   const [idNestedTableSelected, setIdNestedTableSelected] = useState<string | null>(null);
   const { nodes, editNode, removeNode } = useCanvasStore.getState();
 
@@ -172,13 +173,23 @@ export const TableNodeContent = ({
     return result;
   };
 
-  const handleAddAtribute = (tableId: string) => {
+  interface Atribute {
+    name: string;
+    type: string;
+  }
 
-    const newAttribute = {
-      id: `${tableId}-${generateRandomId()}`,
-      name: "atributo prueba",
-      type: "VARCHAR(255)"
-    };
+  const handleAddAtribute = (newAtributes: Atribute[]) => {
+
+    const generateNewAtributes = (newAtributes: Atribute[]) => {
+      return newAtributes.map(atribute => ({
+        id: `${idNestedTableSelected}-${generateRandomId()}`,
+        name: atribute.name,
+        type: atribute.type
+      }))
+    }
+
+    const newAtributesWithId = generateNewAtributes(newAtributes) 
+
 
     setNodes((nodes: Node[]) => {
       return nodes?.map((node: Node) => {
@@ -188,10 +199,10 @@ export const TableNodeContent = ({
           // Recursive function to add attribute in nested tables
           const addAttributeToNested = (nestedTables: TableData[]): TableData[] => {
             return nestedTables?.map(table => {
-              if (table.id === tableId) {
+              if (table.id === idNestedTableSelected) {
                 return {
                   ...table,
-                  columns: [...table.columns, newAttribute]
+                  columns: [...table.columns, ...newAtributesWithId]
                 };
               }
               
@@ -208,12 +219,12 @@ export const TableNodeContent = ({
           };
 
           // If the table to modify is the main one
-          if (tableData.id === tableId) {
+          if (tableData.id === idNestedTableSelected) {
             return {
               ...node,
               data: {
                 ...tableData,
-                columns: [...tableData.columns, newAttribute]
+                columns: [...tableData.columns, ...newAtributesWithId]
               }
             };
           }
@@ -355,14 +366,6 @@ export const TableNodeContent = ({
 		editNode(rootId as string, editableNode);
 	};
 
-  const handleSubmit = () => {
-    if (docName.trim()) {
-      handleAddNestedTable(docName);
-      setDocName("");
-      setIsModalOpen(false);
-    }
-  };
-
   return (
     <>
       <div className="table">
@@ -393,7 +396,11 @@ export const TableNodeContent = ({
               </DropdownMenuItem>
                 
               <DropdownMenuSeparator className="bg-gray" />
-              <DropdownMenuItem type="normal" onClick={() => handleAddAtribute(data.id as string)}>
+              <DropdownMenuItem type="normal" onClick={(e) => {
+                e.preventDefault();
+                setIdNestedTableSelected(data.id as string);
+                setIsAtributesModalOpen(true);
+              }}>
                 <svg
                   width="16"
                   height="16"
@@ -415,7 +422,7 @@ export const TableNodeContent = ({
                 onClick={(e) => {
                   e.preventDefault();
                   setIdNestedTableSelected(data.id as string);
-                  setIsModalOpen(true);
+                  setIsDocumentModalOpen(true);
                 }}>
                 <div className="flex items-center gap-2">
                   <svg
@@ -486,11 +493,18 @@ export const TableNodeContent = ({
           )}
         </div>
       </div>
-      {isModalOpen && (
+      {isDocumentModalOpen && (
         <ModalDocument 
-          open={isModalOpen} 
-          setOpen={setIsModalOpen} 
+          open={isDocumentModalOpen} 
+          setOpen={setIsDocumentModalOpen} 
           onSubmit={handleAddNestedTable}
+        />
+      )}
+      {isAtributesModalOpen && (
+        <ModalAtributes 
+          open={isAtributesModalOpen} 
+          setOpen={setIsAtributesModalOpen} 
+          onSubmit={handleAddAtribute}
         />
       )}
     </>
