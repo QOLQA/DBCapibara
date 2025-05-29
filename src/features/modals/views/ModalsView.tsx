@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import type { Route } from "./+types/ModalsView";
 import { Plus, User } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useState } from "react";
+import AddSolutionModal from "./AddSolutionModal";
+import type { SolutionModel } from "../canva/types";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -22,13 +25,41 @@ export async function loader() {
 }
 
 const ModalsView = ({ loaderData }: Route.ComponentProps) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const navigate = useNavigate();
+
+	const handleAddSolution = async (name: string) => {
+		// Sends a POST request to create a new solution with the required fields
+		const response = await fetch(`${backendUrl}/solutions`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				name: name, // Replace with actual name input
+			}),
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(errorData.detail || "Failed to add solution");
+		}
+
+		const data = (await response.json()) as SolutionModel;
+		navigate(`/models/${data._id}/canva`);
+	};
+
 	return (
 		<>
 			<header className="bg-secondary-gray pt-[27px] pb-16">
 				<div className="max-w-[1330px] mx-auto flex justify-between items-start">
 					<div>Logo</div>
 					<div className="flex gap-[68px]">
-						<Button className="text-white font-weight-900 cursor-pointer bg-black">
+						<Button
+							type="button"
+							onClick={() => setIsModalOpen(true)}
+							className="text-white font-weight-900 cursor-pointer bg-black"
+						>
 							<Plus /> Nuevo Modelo
 						</Button>
 						<Button className="rounded-full" size="icon">
@@ -48,6 +79,13 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 					</ul>
 				</div>
 			</main>
+
+			{isModalOpen && (
+				<AddSolutionModal
+					onClose={() => setIsModalOpen(false)}
+					onSubmit={handleAddSolution}
+				/>
+			)}
 		</>
 	);
 };

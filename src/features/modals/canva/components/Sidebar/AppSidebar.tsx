@@ -3,32 +3,35 @@ import { Calendar, Database, DataPie } from "@/components/icons/SidebarIcons";
 import { SidebarIcons } from "./SidebarIcons";
 import { useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";
+import { AppQueries } from "../Queries/AppQueries";
+import type { NavItem } from "./types";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/user.png",
-  },
-  navMain: [
-    {
-      title: "Database",
-      icon: <Database />,
-      isActive: true,
-    },
-    {
-      title: "Consultas",
-      icon: <Calendar />,
-    },
-    {
-      title: "Estadísticas",
-      icon: <DataPie />,
-    },
-  ],
+	user: {
+		name: "shadcn",
+		email: "m@example.com",
+		avatar: "/user.png",
+	},
+	navMain: [
+		{
+			title: "Database",
+			icon: <Database />,
+			isActive: true,
+		},
+		{
+			title: "Consultas",
+			icon: <Calendar />,
+			content: <AppQueries />,
+		},
+		{
+			title: "Estadísticas",
+			icon: <DataPie />,
+		},
+	],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-	const [activeItem, setActiveItem] = useState(data.navMain[0]);
+	const [activeItem, setActiveItem] = useState<NavItem>(data.navMain[0]);
 	const { setOpen } = useSidebar();
 	return (
 		<Sidebar
@@ -42,7 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				setActiveItem={setActiveItem}
 				setOpen={setOpen}
 			/>
-			<SidebarContentPrinc activeItem={activeItem} data={data} />
+			<SidebarContentPrinc activeItem={activeItem} />
 		</Sidebar>
 	);
 }

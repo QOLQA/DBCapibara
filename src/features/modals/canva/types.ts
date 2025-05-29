@@ -1,64 +1,85 @@
+import type { Edge, Node } from "@xyflow/react";
+
 export interface Column {
-  id: string;
-  name: string;
-  type: string;
+	id: string;
+	name: string;
+	type: string;
 }
 
 export interface TableData {
-  [key: string]: unknown;
-  label: string;
-  columns: Column[];
-  nestedTables?: TableData[];
+	[key: string]: unknown;
+	id: string;
+	label: string;
+	columns: Column[];
+	nestedTables?: TableData[];
 }
 
 export interface AttributeNodeProps {
-  column: Column;
-  nodeId: string;
+	column: Column;
+	columnId: string;
 }
 
 export interface TableNodeProps {
-  data: TableData;
-  id: string;
+	data: TableData;
+	id: string;
 }
 
 export interface Query {
-  full_query: string;
-  collections: string[];
+	id: string;
+	full_query: string;
+	collections: string[];
 }
 
 export interface NodeBackend {
-  id: string;
-  name: string;
-  type: string;
-  cols: Column[];
-  position: {
-    x: number;
-    y: number;
-  };
-  nested_nodes?: NestedNode[];
+	id: string;
+	name: string;
+	type: string;
+	cols: Column[];
+	position: {
+		x: number;
+		y: number;
+	};
+	nested_nodes?: NestedNode[];
 }
 
 export interface NestedNode {
-  id: string;
-  name: string;
-  cols: Column[];
-  nested_nodes?: NestedNode[];
+	id: string;
+	name: string;
+	cols: Column[];
+	nested_nodes?: NestedNode[];
 }
 
 export interface EdgeBackend {
-  id: string;
-  source: string;
-  target: string;
+	id: string;
+	source: string;
+	target: string;
 }
 
 export interface Submodel {
-  nodes: NodeBackend[];
-  edges: EdgeBackend[];
+	nodes: NodeBackend[];
+	edges: EdgeBackend[];
+}
+
+export interface VersionBackend {
+	queries: Query[];
+	submodels: Submodel[];
+	description: string;
+	solution_id: string;
+	_id: string;
 }
 
 export interface SolutionModel {
-  _id: string;
-  name: string;
-  queries: Query[];
-  submodels: Submodel[];
+	_id: string;
+	name: string;
+	versions: VersionBackend[];
+	last_version_saved: string;
+}
+
+export interface VersionFrontend {
+	queries: Query[];
+	nodes: Node<TableData>[];
+	edges: Edge[];
+	description: string;
+	solution_id: string;
+	_id: string;
 }

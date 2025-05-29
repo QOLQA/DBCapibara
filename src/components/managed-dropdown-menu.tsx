@@ -1,30 +1,26 @@
-import React, { useId, useEffect, ComponentProps } from "react";
+import { useId, type ComponentProps } from "react";
 import { useDropdownContext } from "@/contexts/dropdown-context";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 
 type DropdownMenuProps = ComponentProps<typeof DropdownMenu>;
 
 interface ManagedDropdownMenuProps extends DropdownMenuProps {
-  id?: string;
-  children: React.ReactNode;
+	id?: string;
+	children: React.ReactNode;
 }
 
 export const ManagedDropdownMenu = ({
-  id: propId,
-  children,
-  open: controlledOpen,
-  onOpenChange: controlledOnOpenChange,
-  ...props
+	id: propId,
+	children,
+	open: controlledOpen,
+	onOpenChange: controlledOnOpenChange,
+	...props
 }: ManagedDropdownMenuProps) => {
   // Generate unique ID if not provided
   const generatedId = useId();
   const id = propId || generatedId;
 
-  const { activeDropdownId, setActiveDropdown } = useDropdownContext();
+	const { activeDropdownId, setActiveDropdown } = useDropdownContext();
 
   // Determine if this menu is open
   const isThisOpen = activeDropdownId === id;
@@ -46,13 +42,13 @@ export const ManagedDropdownMenu = ({
     }
   };
 
-  return (
-    <DropdownMenu
-      open={controlledOpen !== undefined ? controlledOpen : isThisOpen}
-      onOpenChange={handleOpenChange}
-      {...props}
-    >
-      {children}
-    </DropdownMenu>
-  );
+	return (
+		<DropdownMenu
+			open={controlledOpen !== undefined ? controlledOpen : isThisOpen}
+			onOpenChange={handleOpenChange}
+			{...props}
+		>
+			{children}
+		</DropdownMenu>
+	);
 };
