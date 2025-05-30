@@ -39,7 +39,7 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
 		// Get the root node (top-level) from the global nodes state
 		const rootId = getKeySegment(columnId, 1);
 		const originalNode = nodes.find(
-			(node) => node.id === rootId
+			(node) => node.id === rootId,
 		) as Node<TableData>;
 		if (!originalNode) return;
 
@@ -55,7 +55,7 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
 		// If the table is at the first nested level, delete the column directly
 		if (numLayers === 2) {
 			editableNode.data.columns = editableNode.data.columns.filter(
-				(col) => col.id !== column.id
+				(col) => col.id !== column.id,
 			);
 			editNode(editableNode.id, editableNode);
 			return;
@@ -64,11 +64,11 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
 		// Recursive function to navigate and delete the column from deeper nested tables
 		const recursiveDeleteColumn = (
 			nestedTables: TableData,
-			layer: number
+			layer: number,
 		): TableData => {
 			if (layer === numLayers - 1) {
 				nestedTables.columns = nestedTables.columns.filter(
-					(col) => col.id !== column.id
+					(col) => col.id !== column.id,
 				);
 				return nestedTables;
 			}
@@ -77,7 +77,7 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
 			const nestedTableResult = nestedTables.nestedTables?.map((nestedTable) =>
 				nestedTable.id === nestedTableResultId
 					? recursiveDeleteColumn(nestedTable, layer + 1)
-					: nestedTable
+					: nestedTable,
 			) as TableData[];
 
 			return {
@@ -183,7 +183,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 		let result = "";
 		for (let i = 0; i < 8; i++) {
 			result += characters.charAt(
-				Math.floor(Math.random() * characters.length)
+				Math.floor(Math.random() * characters.length),
 			);
 		}
 		return result;
@@ -212,7 +212,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 
 					// Recursive function to add attribute in nested tables
 					const addAttributeToNested = (
-						nestedTables: TableData[]
+						nestedTables: TableData[],
 					): TableData[] => {
 						return nestedTables?.map((table) => {
 							if (table.id === idNestedTableSelected) {
@@ -282,7 +282,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 
 					// Recursive function to add nested table to nested tables
 					const addNestedTableToNested = (
-						nestedTables: TableData[]
+						nestedTables: TableData[],
 					): TableData[] => {
 						return nestedTables?.map((table) => {
 							if (table.id === idNestedTableSelected) {
@@ -341,7 +341,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 		// Get the root node (top-level) from the global nodes state
 		const rootId = getKeySegment(tableId, 1);
 		const originalNode = nodes.find(
-			(node) => node.id === rootId
+			(node) => node.id === rootId,
 		) as Node<TableData>;
 		if (!originalNode) return;
 
@@ -363,11 +363,11 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 		// Recursive function to navigate and delete the nestedTable from deeper nested tables
 		const recursiveDeleteTable = (
 			nestedTables: TableData,
-			layer: number
+			layer: number,
 		): TableData => {
 			if (layer === numLayers - 1) {
 				nestedTables.nestedTables = nestedTables.nestedTables?.filter(
-					(nestedTable) => nestedTable.id !== tableId
+					(nestedTable) => nestedTable.id !== tableId,
 				);
 				return nestedTables;
 			}
@@ -376,7 +376,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 			const nestedTableResult = nestedTables.nestedTables?.map((nestedTable) =>
 				nestedTable.id === nestedTableResultId
 					? recursiveDeleteTable(nestedTable, layer + 1)
-					: nestedTable
+					: nestedTable,
 			) as TableData[];
 
 			return {
@@ -502,7 +502,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 					<div className="table-attributes">
 						{data.columns?.map((column, index) => (
 							<React.Fragment key={column.id}>
-								<AttributeNode column={column} columnId={id} />
+								<AttributeNode column={column} columnId={column.id} />
 								{index < data.columns.length - 1 && (
 									<hr className="border border-gray" />
 								)}
