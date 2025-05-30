@@ -10,12 +10,12 @@ import type { Node } from "@xyflow/react";
 import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
-import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
+import ModalAddCollection from "./ModalAddCollection";
 import { canvaSelector, useCanvasStore } from "@/state/canvaStore";
 import { useShallow } from "zustand/shallow";
 import { useUniqueId } from "@/hooks/use-unique-id";
@@ -82,6 +82,12 @@ const DatabaseDiagram = () => {
 				<span className="text-xl">+</span> Nueva Colección
 			</Button>
 
+			<ModalAddCollection 
+        open={isModalOpen}
+        setOpen={setIsModalOpen}
+        onSubmit={handleAddDocument}
+      />
+
 			<ReactFlow
 				nodes={nodes}
 				edges={edges}
@@ -103,13 +109,7 @@ const DatabaseDiagram = () => {
 				<MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
 			</ReactFlow>
 
-			{isModalOpen && (
-				<AddDocumentModal
-					onClose={() => setIsModalOpen(false)}
-					onSubmit={handleAddDocument}
-				/>
-			)}
-
+			
 			{showError && (
 				<ShowErrorModal
 					onClose={() => setShowError(false)}
