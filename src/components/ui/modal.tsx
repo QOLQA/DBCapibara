@@ -1,4 +1,13 @@
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogOverlay } from "./dialog";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+	DialogOverlay,
+} from "./dialog";
 import type { ReactElement } from "react";
 import { Button } from "./button";
 
@@ -10,53 +19,61 @@ interface ModalProps {
 	onSubmit?: () => void;
 	open: boolean;
 	setOpen: (open: boolean) => void;
-  type?: "create" | "update" | "next" | "save";
+	type?: "create" | "update" | "next" | "save";
 }
 
-export const Modal = ({ title, children, onSubmit, open, setOpen, type = "create" }: ModalProps) => {
+export const Modal = ({
+	title,
+	children,
+	onSubmit,
+	open,
+	setOpen,
+	type = "create",
+}: ModalProps) => {
 	return createPortal(
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-3xl"/>
+			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-3xl" />
 			<DialogContent className="w-[730px] bg-primary-gray border-2 border-gray">
 				<DialogHeader>
 					<DialogTitle className="text-white">{title}</DialogTitle>
 				</DialogHeader>
 				<div className="w-full h-[2px] bg-gray"></div>
 
-				<div className="my-4">
-          {children}
-        </div>
-        
+				<div className="my-4">{children}</div>
+
 				<DialogFooter>
-          <div className="flex justify-between gap-4">
-            {
-              type !== "next" && (
-                <DialogClose asChild>
-                  <Button
-                    variant={"outline"}
-                    type="button"
-                    className="w-[6rem] cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
-                  >
-                    Cancelar
-                  </Button>
-                </DialogClose>
-              )
-            }
-            <DialogClose asChild>
-              <Button
-                variant={"outline"}
-                type="button"
-                onClick={() => onSubmit?.()}
-                className="w-[6rem] cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
-              >
-                {type === "create" ? "Crear" : type === "update" ? "Actualizar" : type === "next" ? "Siguiente" : "Guardar"}
-              </Button>
-            </DialogClose>
-          </div>
-        </DialogFooter>
+					<div className="flex justify-between gap-4">
+						{type !== "next" && (
+							<DialogClose asChild>
+								<Button
+									variant={"outline"}
+									type="button"
+									className="w-[6rem] cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
+								>
+									Cancelar
+								</Button>
+							</DialogClose>
+						)}
+						<DialogClose asChild>
+							<Button
+								variant={"outline"}
+								type="button"
+								onClick={() => onSubmit?.()}
+								className="w-[6rem] cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
+							>
+								{type === "create"
+									? "Crear"
+									: type === "update"
+										? "Actualizar"
+										: type === "next"
+											? "Siguiente"
+											: "Guardar"}
+							</Button>
+						</DialogClose>
+					</div>
+				</DialogFooter>
 			</DialogContent>
 		</Dialog>,
-		document.body
-
+		document.body,
 	);
 };
