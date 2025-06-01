@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
+
 import {
 	Select,
 	SelectValue,
@@ -119,6 +120,7 @@ const ModalAtributes: React.FC<ModalAtributesProps> = ({
 			</div>
 		</Modal>
 	);
+
 };
 
 export default ModalAtributes;

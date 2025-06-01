@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { type Node, useReactFlow } from "@xyflow/react";
 import { ManagedDropdownMenu } from "@/components/managed-dropdown-menu";
-import type {
-	AttributeNodeProps,
-	TableData,
-	TableNodeProps,
-	Column,
-} from "../types";
+import type { AttributeNodeProps, TableData, TableNodeProps, Column } from "../types";
 import {
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -16,6 +11,7 @@ import {
 import { MoreButton } from "./MoreButton";
 // import AtributesModal from "./AtributesModal";
 import ModalDocument from "./ModalDocument";
+
 import {
 	Dialog,
 	DialogContent,
@@ -23,6 +19,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -169,6 +166,7 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
  * - handleAddAtribute: function to handle attribute addition
  * - handleAddNestedTable: function to handle nested table addition
  */
+
 export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 	const { setNodes } = useReactFlow();
 	const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
@@ -539,4 +537,5 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 			)}
 		</>
 	);
+
 };

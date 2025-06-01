@@ -1,3 +1,4 @@
+
 import {
 	Dialog,
 	DialogClose,
@@ -8,6 +9,7 @@ import {
 	DialogTrigger,
 	DialogOverlay,
 } from "./dialog";
+
 import type { ReactElement } from "react";
 import { Button } from "./button";
 
@@ -19,6 +21,7 @@ interface ModalProps {
 	onSubmit?: () => void;
 	open: boolean;
 	setOpen: (open: boolean) => void;
+
 	type?: "create" | "update" | "next" | "save";
 }
 
@@ -33,11 +36,13 @@ export const Modal = ({
 	return createPortal(
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-3xl" />
+
 			<DialogContent className="w-[730px] bg-primary-gray border-2 border-gray">
 				<DialogHeader>
 					<DialogTitle className="text-white">{title}</DialogTitle>
 				</DialogHeader>
 				<div className="w-full h-[2px] bg-gray"></div>
+
 
 				<div className="my-4">{children}</div>
 
