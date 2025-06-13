@@ -5,7 +5,6 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 	DialogOverlay,
 } from "./dialog";
 import type { ReactElement } from "react";
@@ -37,7 +36,7 @@ export const Modal = ({
 				<DialogHeader>
 					<DialogTitle className="text-white">{title}</DialogTitle>
 				</DialogHeader>
-				<div className="w-full h-[2px] bg-gray"></div>
+				<div className="w-full h-[2px] bg-gray" />
 
 				<div className="my-4">{children}</div>
 
