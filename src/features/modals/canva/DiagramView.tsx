@@ -80,7 +80,7 @@ export default function DiagramView({ loaderData }: Route.ComponentProps) {
 				setId(loaderData.solutionId);
 				setNodes(loaderData.versions[versionId].nodes);
 				setEdges(loaderData.versions[versionId].edges);
-				setQueries(loaderData.versions[versionId].queries);
+				setQueries(loaderData.queries);
 				setVersions(loaderData.versions);
 				setSelectedVersionId(loaderData.versions[versionId]._id);
 			}

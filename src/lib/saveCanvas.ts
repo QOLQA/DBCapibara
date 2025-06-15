@@ -1,4 +1,4 @@
-import type { VersionBackend } from "@/features/modals/canva/types";
+import type { Query, VersionBackend } from "@/features/modals/canva/types";
 import { loadCanva } from "./loadCanva";
 
 const backendUrl = "http://localhost:8000";
@@ -8,15 +8,15 @@ export const saveCanvas = async (
 	versionId: string,
 	diagram: VersionBackend,
 ) => {
-	const diagramJson = JSON.stringify(diagram, null, 2);
+	const versionJson = JSON.stringify(diagram, null, 2);
 
-	const url = `${backendUrl}/solutions/${diagramId}/versions/${versionId}`;
+	const versionEndpoint = `${backendUrl}/solutions/${diagramId}/versions/${versionId}`;
 
 	try {
-		await fetch(url, {
+		await fetch(versionEndpoint, {
 			method: "PATCH",
 			headers: { "Content-Type": "application/json" },
-			body: diagramJson,
+			body: versionJson,
 		});
 	} catch (error) {
 		console.error("Error saving canvas:", error);
@@ -25,3 +25,19 @@ export const saveCanvas = async (
 
 	loadCanva(diagramId, versionId);
 };
+
+export const saveSolution = async (diagramId: string, queries: Query[]) => {
+	const solutionJson = JSON.stringify({ queries }, null, 2)
+	const solutionEndpoint = `${backendUrl}/solutions/${diagramId}`;
+
+	try {
+		await fetch(solutionEndpoint, {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: solutionJson,
+		});
+	} catch (error) {
+		console.error("Error saving canvas:", error);
+		throw new Error("Failed to save canvas");
+	}
+}

@@ -1,6 +1,6 @@
 import { Save } from "@/components/icons/HeaderIcons";
 import { transformVersionToBackend } from "@/lib/canvaConversion";
-import { saveCanvas } from "@/lib/saveCanvas";
+import { saveCanvas, saveSolution } from "@/lib/saveCanvas";
 import { useCanvasStore } from "@/state/canvaStore";
 import { getNodesBounds, getViewportForBounds } from "@xyflow/react";
 import { toPng, toSvg } from "html-to-image";
@@ -32,9 +32,9 @@ export const ButtonSave = () => {
 			versionActual[0],
 			nodes,
 			edges,
-			queries,
 		);
 
+		saveSolution(Id, queries);
 		saveCanvas(Id, versionId, diagram);
 
 		generateImage()
