@@ -7,7 +7,6 @@ import type {
 	NestedNode,
 	Submodel,
 	EdgeBackend,
-	Query,
 } from "@/features/modals/canva/types";
 
 function tableDataToNodeBackend(node: Node<TableData>): NodeBackend {
@@ -46,7 +45,6 @@ export function transformVersionToBackend(
 	version: VersionFrontend,
 	nodes: Node<TableData>[],
 	edges: Edge[],
-	queries: Query[],
 ): VersionBackend {
 	const nodeMap = new Map<string, Node<TableData>>();
 	for (const node of nodes) {
@@ -112,7 +110,6 @@ export function transformVersionToBackend(
 	});
 
 	return {
-		queries: queries,
 		submodels: submodels,
 		description: version.description,
 		solution_id: version.solution_id,
