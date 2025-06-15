@@ -17,7 +17,6 @@ export const LogoWithSelect = () => {
 		setSelectedVersionId,
 		setNodes,
 		setEdges,
-		setQueries,
 	} = useCanvasStore<ReturnType<typeof canvaSelector>>(
 		useShallow(canvaSelector),
 	);
@@ -28,7 +27,6 @@ export const LogoWithSelect = () => {
 		);
 		setNodes(versions[versionIndex].nodes);
 		setEdges(versions[versionIndex].edges);
-		setQueries(versions[versionIndex].queries);
 		setSelectedVersionId(newVersionId);
 	};
 
