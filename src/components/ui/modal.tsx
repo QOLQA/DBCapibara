@@ -19,6 +19,7 @@ interface ModalProps {
 	open: boolean;
 	setOpen: (open: boolean) => void;
 	type?: "create" | "update" | "next" | "save";
+	showCloseButton?: boolean;
 }
 
 export const Modal = ({
@@ -28,12 +29,16 @@ export const Modal = ({
 	open,
 	setOpen,
 	type = "create",
+	showCloseButton = true,
 }: ModalProps) => {
 	return createPortal(
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-3xl" />
-			<DialogContent className="w-[730px] bg-primary-gray border-2 border-gray">
-				<DialogHeader>
+			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-xs" />
+			<DialogContent
+				className="w-[730px] bg-primary-gray border-2 border-gray"
+				showCloseButton={showCloseButton}
+			>
+				<DialogHeader className="flex flex-row items-center justify-between">
 					<DialogTitle className="text-white">{title}</DialogTitle>
 				</DialogHeader>
 				<div className="w-full h-[2px] bg-gray" />

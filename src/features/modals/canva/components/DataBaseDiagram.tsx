@@ -35,7 +35,7 @@ const DatabaseDiagram = () => {
 		onNodesChange,
 		onEdgesChange,
 	} = useCanvasStore<ReturnType<typeof canvaSelector>>(
-		useShallow(canvaSelector)
+		useShallow(canvaSelector),
 	);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,7 +61,7 @@ const DatabaseDiagram = () => {
 				columns: [
 					{
 						id: `${newIdNode}-${generateId()}`,
-						name: "id",
+						name: `${name}_id`,
 						type: "PRIMARY_KEY",
 					},
 				],
@@ -82,11 +82,11 @@ const DatabaseDiagram = () => {
 				<span className="text-xl">+</span> Nueva Colección
 			</Button>
 
-			<ModalAddCollection 
-        open={isModalOpen}
-        setOpen={setIsModalOpen}
-        onSubmit={handleAddDocument}
-      />
+			<ModalAddCollection
+				open={isModalOpen}
+				setOpen={setIsModalOpen}
+				onSubmit={handleAddDocument}
+			/>
 
 			<ReactFlow
 				nodes={nodes}
@@ -109,7 +109,6 @@ const DatabaseDiagram = () => {
 				<MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
 			</ReactFlow>
 
-			
 			{showError && (
 				<ShowErrorModal
 					onClose={() => setShowError(false)}
