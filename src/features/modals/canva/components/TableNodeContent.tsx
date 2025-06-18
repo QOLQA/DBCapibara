@@ -37,7 +37,11 @@ import {
 	Plus,
 } from "@/components/icons/TableOptionsIcons";
 
-const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
+const AttributeNode = ({
+	column,
+	columnId,
+	handleEdit,
+}: AttributeNodeProps) => {
 	const { nodes, editNode } = useCanvasStore.getState();
 
 	const handleDeleteAttribute = (column: Column) => {
@@ -121,20 +125,13 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
 							side="right"
 							variant="menu-1"
 						>
-							<DropdownMenuItem type="normal" onClick={() => {}}>
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 16 16"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<title>Pencil</title>
-									<path
-										d="M13.9681 2.03162C13.0364 1.09994 11.5258 1.09998 10.5942 2.03172L2.62751 9.99934C2.35663 10.2703 2.16623 10.611 2.07749 10.9837L1.3471 14.0513C1.30689 14.2203 1.35718 14.3979 1.47995 14.5207C1.60273 14.6435 1.78041 14.6938 1.94932 14.6536L5.01682 13.9232C5.38962 13.8344 5.73047 13.644 6.00143 13.373L12.6665 6.70713C13.1186 7.16303 13.1175 7.89913 12.663 8.35357L11.4741 9.54252C11.2788 9.73778 11.2788 10.0544 11.4741 10.2496C11.6693 10.4449 11.9859 10.4449 12.1812 10.2496L13.3701 9.06068C14.2151 8.2157 14.2163 6.84641 13.3736 5.99998L13.9682 5.40529C14.8997 4.47364 14.8997 2.96322 13.9681 2.03162ZM11.3013 2.73878C11.8425 2.19761 12.7198 2.19758 13.261 2.73872C13.8021 3.27982 13.8021 4.1571 13.261 4.69823L5.29429 12.6659C5.15419 12.806 4.97795 12.9045 4.7852 12.9504L2.5081 13.4926L3.0503 11.2153C3.09618 11.0226 3.19462 10.8465 3.33466 10.7064L11.3013 2.73878Z"
-										fill="#DFDFDF"
-									/>
-								</svg>
+							<DropdownMenuItem
+								type="normal"
+								onClick={async (e) => {
+									handleEdit(column);
+								}}
+							>
+								<Edit className="text-white" />
 								Editar
 							</DropdownMenuItem>
 							<DropdownMenuSeparator className="bg-gray" />
@@ -176,6 +173,14 @@ const AttributeNode = ({ column, columnId }: AttributeNodeProps) => {
  * - handleAddAtribute: function to handle attribute addition
  * - handleAddNestedTable: function to handle nested table addition
  */
+
+interface TableAttribute {
+	id: string;
+	name: string;
+	type: string;
+	ableToEdit: boolean;
+}
+
 export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 	const { setNodes } = useReactFlow();
 	const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
@@ -186,6 +191,9 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 	const [typeAtributesModal, setTypeAtributesModal] = useState<
 		"create" | "update"
 	>("create");
+	const [atributesToUpdate, setAtributesToUpdate] = useState<TableAttribute[]>(
+		[],
+	);
 	const { nodes, editNode, removeNode } = useCanvasStore.getState();
 
 	const generateRandomId = () => {
@@ -199,13 +207,11 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 		return result;
 	};
 
-	interface Atribute {
-		name: string;
-		type: string;
-	}
-
-	const handleAddAtribute = (newAtributes: Atribute[]) => {
-		const generateNewAtributes = (newAtributes: Atribute[]) => {
+	const handleAddAtribute = (
+		newAtributes: TableAttribute[],
+		typeModal: "create" | "update",
+	) => {
+		const generateNewAtributes = (newAtributes: TableAttribute[]) => {
 			return newAtributes.map((atribute) => ({
 				id: `${idNestedTableSelected}-${generateRandomId()}`,
 				name: atribute.name,
@@ -213,7 +219,10 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 			}));
 		};
 
-		const newAtributesWithId = generateNewAtributes(newAtributes);
+		const newAtributesWithId =
+			typeModal === "create"
+				? generateNewAtributes(newAtributes)
+				: newAtributes;
 
 		setNodes((nodes: Node[]) => {
 			return nodes?.map((node: Node) => {
@@ -228,11 +237,13 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 							if (table.id === idNestedTableSelected) {
 								return {
 									...table,
-									columns: [...table.columns, ...newAtributesWithId],
+									columns:
+										typeModal === "create"
+											? [...table.columns, ...newAtributesWithId]
+											: newAtributesWithId,
 								};
 							}
 
-							// Si no es esta tabla, buscamos en las anidadas
 							if (table.nestedTables && table.nestedTables.length > 0) {
 								return {
 									...table,
@@ -250,7 +261,10 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 							...node,
 							data: {
 								...tableData,
-								columns: [...tableData.columns, ...newAtributesWithId],
+								columns:
+									typeModal === "create"
+										? [...tableData.columns, ...newAtributesWithId]
+										: newAtributesWithId,
 							},
 						};
 					}
@@ -399,6 +413,59 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 		editNode(rootId as string, editableNode);
 	};
 
+	const handleFindAtributesToUpdate = (tableId: string) => {
+		const numLayers = tableId.split("-").length;
+		let k = 1;
+		const node = nodes?.find((node: Node) => node.id === id);
+		let table = node?.data;
+		while (k < numLayers) {
+			k = k + 1;
+			const segmentedKey = getKeySegment(tableId, k);
+			table = table?.nestedTables?.find(
+				(table: TableData) => table.id === segmentedKey,
+			);
+		}
+		console.log("table.columns", table?.columns);
+		// add an atribute to each column called "ableToEdit" and set it to true
+		const columns = table?.columns?.map((column) => ({
+			...column,
+			ableToEdit:
+				column.type !== "PRIMARY_KEY" &&
+				column.type !== "FOREIGN_KEY" &&
+				column.type !== "DOCUMENT",
+		}));
+
+		console.log("columns", columns);
+		setAtributesToUpdate(columns || []);
+	};
+
+	const handleEditAtribute = (selectedColumn: Column) => {
+		console.log("column", selectedColumn);
+
+		const numLayers = selectedColumn.id.split("-").length;
+		let k = 1;
+		const node = nodes?.find((node: Node) => node.id === id);
+		let table = node?.data;
+		while (k < numLayers - 1) {
+			k = k + 1;
+			const segmentedKey = getKeySegment(selectedColumn.id, k);
+			table = table?.nestedTables?.find(
+				(table: TableData) => table.id === segmentedKey,
+			);
+		}
+		console.log("table.columns", table?.columns);
+		// add an atribute to each column called "ableToEdit" and set it to true
+		const columns = table?.columns?.map((column) => ({
+			...column,
+			ableToEdit: column.id === selectedColumn.id,
+		}));
+
+		console.log("columns", columns);
+		setAtributesToUpdate(columns || []);
+		setIsAtributesModalOpen(true);
+		setTypeAtributesModal("update");
+	};
+
 	return (
 		<>
 			<div className="table">
@@ -420,6 +487,7 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 									e.preventDefault();
 									setIdNestedTableSelected(data.id as string);
 									await setTypeAtributesModal("update");
+									await handleFindAtributesToUpdate(data.id as string);
 									setIsAtributesModalOpen(true);
 								}}
 							>
@@ -472,7 +540,11 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 					<div className="table-attributes">
 						{data.columns?.map((column, index) => (
 							<React.Fragment key={column.id}>
-								<AttributeNode column={column} columnId={column.id} />
+								<AttributeNode
+									column={column}
+									columnId={column.id}
+									handleEdit={handleEditAtribute}
+								/>
 								{index < data.columns.length - 1 && (
 									<hr className="border border-gray" />
 								)}
@@ -506,6 +578,9 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 					setOpen={setIsAtributesModalOpen}
 					onSubmit={handleAddAtribute}
 					type={typeAtributesModal}
+					atributesToUpdate={
+						typeAtributesModal === "update" ? atributesToUpdate : undefined
+					}
 				/>
 			)}
 		</>

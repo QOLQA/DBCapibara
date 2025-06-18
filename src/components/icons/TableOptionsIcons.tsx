@@ -77,9 +77,9 @@ export const Delete = ({ className }: { className?: string }) => {
 export const Trash = ({ className }: { className?: string }) => {
 	return (
 		<svg
-			width="19"
-			height="20"
-			viewBox="0 0 19 20"
+			width="16"
+			height="16"
+			viewBox="0 0 16 16"
 			fill="currentColor"
 			className={className}
 			xmlns="http://www.w3.org/2000/svg"

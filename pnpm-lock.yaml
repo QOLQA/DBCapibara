@@ -68,6 +68,9 @@ dependencies:
   react-dom:
     specifier: ^19.0.0
     version: 19.1.0(react@19.1.0)
+  react-hook-form:
+    specifier: ^7.58.1
+    version: 7.58.1(react@19.1.0)
   react-redux:
     specifier: ^9.2.0
     version: 9.2.0(@types/react@19.1.5)(react@19.1.0)(redux@5.0.1)
@@ -2878,6 +2881,15 @@ packages:
     dependencies:
       react: 19.1.0
       scheduler: 0.26.0
+
+  /react-hook-form@7.58.1(react@19.1.0):
+    resolution: {integrity: sha512-Lml/KZYEEFfPhUVgE0RdCVpnC4yhW+PndRhbiTtdvSlQTL8IfVR+iQkBjLIvmmc6+GGoVeM11z37ktKFPAb0FA==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+    dependencies:
+      react: 19.1.0
+    dev: false
 
   /react-redux@9.2.0(@types/react@19.1.5)(react@19.1.0)(redux@5.0.1):
     resolution: {integrity: sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==}

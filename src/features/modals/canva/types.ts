@@ -17,6 +17,7 @@ export interface TableData {
 export interface AttributeNodeProps {
 	column: Column;
 	columnId: string;
+	handleEdit: (column: Column) => void;
 }
 
 export interface TableNodeProps {
