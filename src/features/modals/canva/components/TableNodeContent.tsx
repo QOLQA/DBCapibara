@@ -425,7 +425,6 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 				(table: TableData) => table.id === segmentedKey,
 			);
 		}
-		console.log("table.columns", table?.columns);
 		// add an atribute to each column called "ableToEdit" and set it to true
 		const columns = table?.columns?.map((column) => ({
 			...column,
@@ -435,13 +434,10 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 				column.type !== "DOCUMENT",
 		}));
 
-		console.log("columns", columns);
 		setAtributesToUpdate(columns || []);
 	};
 
 	const handleEditAtribute = (selectedColumn: Column) => {
-		console.log("column", selectedColumn);
-
 		const numLayers = selectedColumn.id.split("-").length;
 		let k = 1;
 		const node = nodes?.find((node: Node) => node.id === id);
@@ -453,14 +449,12 @@ export const TableNodeContent = ({ data, id }: TableNodeProps) => {
 				(table: TableData) => table.id === segmentedKey,
 			);
 		}
-		console.log("table.columns", table?.columns);
 		// add an atribute to each column called "ableToEdit" and set it to true
 		const columns = table?.columns?.map((column) => ({
 			...column,
 			ableToEdit: column.id === selectedColumn.id,
 		}));
 
-		console.log("columns", columns);
 		setAtributesToUpdate(columns || []);
 		setIsAtributesModalOpen(true);
 		setTypeAtributesModal("update");
