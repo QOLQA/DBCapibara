@@ -16,31 +16,31 @@ export const ManagedDropdownMenu = ({
 	onOpenChange: controlledOnOpenChange,
 	...props
 }: ManagedDropdownMenuProps) => {
-	// Generar ID único si no se proporciona
-	const generatedId = useId();
-	const id = propId || generatedId;
+  // Generate unique ID if not provided
+  const generatedId = useId();
+  const id = propId || generatedId;
 
 	const { activeDropdownId, setActiveDropdown } = useDropdownContext();
 
-	// Determinar si este menú está abierto
-	const isThisOpen = activeDropdownId === id;
+  // Determine if this menu is open
+  const isThisOpen = activeDropdownId === id;
 
-	// Manejar cambios en el estado del menú
-	const handleOpenChange = (open: boolean) => {
-		// Si el menú se está abriendo, establecerlo como activo
-		if (open) {
-			setActiveDropdown(id);
-		}
-		// Si este menú se está cerrando, limpiar el menú activo
-		else if (activeDropdownId === id) {
-			setActiveDropdown(null);
-		}
+  // Handle changes in menu state
+  const handleOpenChange = (open: boolean) => {
+    // If the menu is opening, set it as active
+    if (open) {
+      setActiveDropdown(id);
+    }
+    // If this menu is closing, clear the active menu
+    else if (activeDropdownId === id) {
+      setActiveDropdown(null);
+    }
 
-		// Propagar al controlador de cambio de apertura proporcionado si existe
-		if (controlledOnOpenChange) {
-			controlledOnOpenChange(open);
-		}
-	};
+    // Propagate to the provided open change controller if it exists
+    if (controlledOnOpenChange) {
+      controlledOnOpenChange(open);
+    }
+  };
 
 	return (
 		<DropdownMenu
