@@ -3,7 +3,8 @@ import { transformVersionToBackend } from "@/lib/canvaConversion";
 import { saveCanvas, saveSolution } from "@/lib/saveCanvas";
 import { useCanvasStore } from "@/state/canvaStore";
 import { getNodesBounds, getViewportForBounds } from "@xyflow/react";
-import { toPng, toSvg } from "html-to-image";
+import { toJpeg } from "html-to-image";
+import { uploadImage } from "@/lib/imageService";
 
 const imageWidth = 1024;
 const imageHeight = 768;
@@ -24,7 +25,7 @@ export const ButtonSave = () => {
 	const edges = useCanvasStore((state) => state.edges);
 	const queries = useCanvasStore((state) => state.queries);
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		const versionActual = versions.filter(
 			(version) => version._id === versionId,
 		);
@@ -34,17 +35,17 @@ export const ButtonSave = () => {
 			edges,
 		);
 
-		saveSolution(Id, queries);
+		const secureUrl = await generateImage();
+		saveSolution(Id, queries, secureUrl);
 		saveCanvas(Id, versionId, diagram);
 
-		generateImage()
 	};
 
-	const generateImage = () => {
+	const generateImage = async () => {
 		const nodesBounds = getNodesBounds(nodes)
 		const viewport = getViewportForBounds(nodesBounds, imageWidth, imageHeight, 0.5, 2)
 
-		toSvg(document.querySelector('.react-flow__viewport') as HTMLElement, {
+		const pngString = await toJpeg(document.querySelector('.react-flow__viewport') as HTMLElement, {
 			backgroundColor: '#171717',
 			width: imageWidth,
 			height: imageHeight,
@@ -54,7 +55,10 @@ export const ButtonSave = () => {
 				transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`
 			},
 			skipFonts: true
-		}).then(downloadImage)
+		})
+
+		const imageUrl = await uploadImage(pngString, Id);
+		return imageUrl;
 	}
 
 	return (
