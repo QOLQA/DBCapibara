@@ -30,7 +30,7 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 
 	const handleAddSolution = async (name: string) => {
 		// Sends a POST request to create a new solution with the required fields
-		const response = await fetch(`${backendUrl}/solutions`, {
+		const response = await fetch('http://localhost:8000/solutions', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
