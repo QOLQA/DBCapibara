@@ -1,6 +1,7 @@
 const CLOUDINARY_URL = import.meta.env.VITE_CLOUDINARY_URL;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 const CLOUDINARY_API_SECRET = import.meta.env.VITE_CLOUDINARY_API_SECRET;
+const CLOUDINARY_API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
 
 const generateSignature = async (publicId: string, timestamp: string): Promise<string> => {
     // Create the string to hash
@@ -18,7 +19,7 @@ const generateSignature = async (publicId: string, timestamp: string): Promise<s
         .join('&');
 
     // Append API secret
-    const stringToSign = sortedParams + 'wWvbf0teSw7yepMacARckNQefEs';
+    const stringToSign = sortedParams + CLOUDINARY_API_SECRET;
 
     // Generate SHA-1 hash
     return crypto.subtle.digest('SHA-256', new TextEncoder().encode(stringToSign))
@@ -45,8 +46,8 @@ export const uploadImage = async (imageData: string, solutionId: string): Promis
         formData.append('upload_preset', UPLOAD_PRESET);
         formData.append('public_id', solutionId);
         formData.append('overwrite', 'true');
-        formData.append('api_key', '441192737821147');
-        formData.append('signature', signature);
+        formData.append('api_key', CLOUDINARY_API_KEY);
+        formData.append('signature', signature);        
         formData.append('timestamp', timestamp);
 
         const uploadResponse = await fetch(
