@@ -9,14 +9,6 @@ import { uploadImage } from "@/lib/imageService";
 const imageWidth = 1024;
 const imageHeight = 768;
 
-function downloadImage(dataUrl: string) {
-  const a = document.createElement('a');
- 
-  a.setAttribute('download', 'reactflow.png');
-  a.setAttribute('href', dataUrl);
-  a.click();
-}
-
 export const ButtonSave = () => {
 	const Id = useCanvasStore((state) => state.id);
 	const versionId = useCanvasStore((state) => state.selectedVersionId);
@@ -52,7 +44,8 @@ export const ButtonSave = () => {
 			style: {
 				width: imageWidth,
 				height: imageHeight,
-				transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`
+				transform: `translate(${viewport.x}px, ${viewport.y}px) scale(${viewport.zoom})`,
+				aspectRatio: `${imageWidth} / ${imageHeight}`,
 			},
 			skipFonts: true
 		})
