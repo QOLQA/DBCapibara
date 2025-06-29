@@ -30,7 +30,7 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 
 	const handleAddSolution = async (name: string) => {
 		// Sends a POST request to create a new solution with the required fields
-		const response = await fetch(`${backendUrl}/solutions`, {
+		const response = await fetch('http://localhost:8000/solutions', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -97,16 +97,17 @@ interface ModelProps {
 	submodels: unknown;
 	queries: unknown;
 	_id: string;
+	src_img: string;
 }
 
-const Model = ({ _id, name, queries, submodels }: ModelProps) => {
+const Model = ({ _id, name, src_img }: ModelProps) => {
 	return (
 		<li className="model">
 			<Link to={`/models/${_id}/canva`} className="focus:rounded-2xl">
 				<div className="model__thumbnail">
 					<img
-						src="https://via.assets.so/img.jpg?w=400&h=198&tc=gray&bg=#171717"
-						alt="Thumbnail placeholder"
+						src={src_img}
+						alt="Model thumbnail"
 						className="model__thumbnail-img"
 					/>
 				</div>

@@ -26,8 +26,8 @@ export const saveCanvas = async (
 	loadCanva(diagramId, versionId);
 };
 
-export const saveSolution = async (diagramId: string, queries: Query[]) => {
-	const solutionJson = JSON.stringify({ queries }, null, 2)
+export const saveSolution = async (diagramId: string, queries: Query[], src_img: string) => {
+	const solutionJson = JSON.stringify({ queries, src_img }, null, 2)
 	const solutionEndpoint = `${backendUrl}/solutions/${diagramId}`;
 
 	try {
