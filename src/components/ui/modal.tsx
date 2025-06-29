@@ -11,6 +11,7 @@ import type { ReactElement } from "react";
 import { Button } from "./button";
 
 import { createPortal } from "react-dom";
+import React from "react";
 
 interface ModalProps {
 	title: string;
@@ -22,7 +23,7 @@ interface ModalProps {
 	showCloseButton?: boolean;
 }
 
-export const Modal = ({
+export const Modal = React.memo(function Modal({
 	title,
 	children,
 	onSubmit,
@@ -30,7 +31,7 @@ export const Modal = ({
 	setOpen,
 	type = "create",
 	showCloseButton = true,
-}: ModalProps) => {
+}: ModalProps) {
 	return createPortal(
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogOverlay className="bg-[#000000]/80 backdrop-blur-xs" />
@@ -80,4 +81,4 @@ export const Modal = ({
 		</Dialog>,
 		document.body,
 	);
-};
+});

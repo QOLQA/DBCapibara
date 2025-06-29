@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import {
 	ReactFlow,
 	Background,
@@ -25,6 +25,12 @@ const connectionLineStyle = {
 	strokeWidth: 3,
 };
 
+const defaultEdgeOptions = {
+	type: "floating",
+	style: connectionLineStyle,
+	markerEnd: { type: MarkerType.ArrowClosed },
+};
+
 const DatabaseDiagram = () => {
 	const {
 		nodes,
@@ -42,41 +48,77 @@ const DatabaseDiagram = () => {
 	const [showError, setShowError] = useState(false);
 	const generateId = useUniqueId();
 
-	const { handleConnect } = useTableConnections({
-		nodes,
-		editNode,
-		addEdge,
-		onError: () => setShowError(true),
-	});
+	const connectionConfig = useMemo(
+		() => ({
+			nodes,
+			editNode,
+			addEdge,
+			onError: () => setShowError(true),
+		}),
+		[nodes, editNode, addEdge],
+	);
 
-	const handleAddDocument = (name: string) => {
-		const newIdNode = generateId();
+	const { handleConnect } = useTableConnections(connectionConfig);
 
-		const newNode: Node<TableData> = {
-			id: newIdNode,
-			position: { x: Math.random() * 400, y: Math.random() * 400 },
-			data: {
+	const handleAddDocument = useCallback(
+		(name: string) => {
+			const newIdNode = generateId();
+
+			const newNode: Node<TableData> = {
 				id: newIdNode,
-				label: name,
-				columns: [
-					{
-						id: `${newIdNode}-${generateId()}`,
-						name: `${name}_id`,
-						type: "PRIMARY_KEY",
-					},
-				],
-			},
-			type: "table",
-		};
+				position: { x: Math.random() * 400, y: Math.random() * 400 },
+				data: {
+					id: newIdNode,
+					label: name,
+					columns: [
+						{
+							id: `${newIdNode}-${generateId()}`,
+							name: `${name}_id`,
+							type: "PRIMARY_KEY",
+						},
+					],
+				},
+				type: "table",
+			};
 
-		addNode(newNode);
-	};
+			addNode(newNode);
+		},
+		[addNode, generateId],
+	);
+
+	const handleOpenModal = useCallback(() => {
+		setIsModalOpen(true);
+	}, []);
+
+	const handleCloseModal = useCallback(() => {
+		setIsModalOpen(false);
+	}, []);
+
+	const handleCloseError = useCallback(() => {
+		setShowError(false);
+	}, []);
+
+	const reactFlowProps = useMemo(
+		() => ({
+			nodes,
+			edges,
+			onNodesChange,
+			onEdgesChange,
+			nodeTypes,
+			edgeTypes,
+			onConnect: handleConnect,
+			connectionLineStyle,
+			defaultEdgeOptions,
+			fitView: true,
+		}),
+		[nodes, edges, onNodesChange, onEdgesChange, handleConnect],
+	);
 
 	return (
 		<div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
 			<Button
 				type="button"
-				onClick={() => setIsModalOpen(true)}
+				onClick={handleOpenModal}
 				className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
 			>
 				<span className="text-xl">+</span> Nueva Colección
@@ -84,26 +126,11 @@ const DatabaseDiagram = () => {
 
 			<ModalAddCollection
 				open={isModalOpen}
-				setOpen={setIsModalOpen}
+				setOpen={handleCloseModal}
 				onSubmit={handleAddDocument}
 			/>
 
-			<ReactFlow
-				nodes={nodes}
-				edges={edges}
-				onNodesChange={onNodesChange}
-				onEdgesChange={onEdgesChange}
-				nodeTypes={nodeTypes}
-				edgeTypes={edgeTypes}
-				onConnect={handleConnect}
-				connectionLineStyle={connectionLineStyle}
-				defaultEdgeOptions={{
-					type: "floating",
-					style: connectionLineStyle,
-					markerEnd: { type: MarkerType.ArrowClosed },
-				}}
-				fitView
-			>
+			<ReactFlow {...reactFlowProps}>
 				<Background className="!bg-terciary-gray rounded-xl" />
 				<Controls className="text-white controls-with-buttons " />
 				<MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
@@ -111,7 +138,7 @@ const DatabaseDiagram = () => {
 
 			{showError && (
 				<ShowErrorModal
-					onClose={() => setShowError(false)}
+					onClose={handleCloseError}
 					errorMessage="Ya existe una relación entre estas tablas"
 				/>
 			)}
