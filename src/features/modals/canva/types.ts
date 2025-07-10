@@ -73,6 +73,7 @@ export interface SolutionModel {
 	versions: VersionBackend[];
 	last_version_saved: string;
 	queries: Query[]
+	src_img: string;
 }
 
 export interface VersionFrontend {
