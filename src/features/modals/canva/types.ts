@@ -61,7 +61,6 @@ export interface Submodel {
 }
 
 export interface VersionBackend {
-	queries: Query[];
 	submodels: Submodel[];
 	description: string;
 	solution_id: string;
@@ -73,10 +72,11 @@ export interface SolutionModel {
 	name: string;
 	versions: VersionBackend[];
 	last_version_saved: string;
+	queries: Query[]
+	src_img: string;
 }
 
 export interface VersionFrontend {
-	queries: Query[];
 	nodes: Node<TableData>[];
 	edges: Edge[];
 	description: string;

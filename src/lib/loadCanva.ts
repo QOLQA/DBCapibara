@@ -25,6 +25,6 @@ export async function loadCanva(diagramId: string, versionId: string) {
 
 	setNodes(transformed.versions[indexVersion].nodes);
 	setEdges(transformed.versions[indexVersion].edges);
-	setQueries(transformed.versions[indexVersion].queries);
+	setQueries(transformed.queries);
 	setVersions(transformed.versions);
 }

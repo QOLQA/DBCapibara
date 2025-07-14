@@ -2,6 +2,7 @@ import type { Node } from "@xyflow/react";
 import type {
 	NestedNode,
 	NodeBackend,
+	Query,
 	SolutionModel,
 	TableData,
 	VersionFrontend,
@@ -20,6 +21,7 @@ export function transformSolutionModel(solution: SolutionModel): {
 	versions: VersionFrontend[];
 	solutionId: string;
 	last_version_saved: string;
+	queries: Query[];
 } {
 	/**
 	 * Maps a NodeBackend or NestedNode to a Node<TableData> object.
@@ -61,7 +63,6 @@ export function transformSolutionModel(solution: SolutionModel): {
 	}
 
 	const versions = solution.versions.map((version) => ({
-		queries: version.queries,
 		nodes: version.submodels.flatMap((submodel) =>
 			submodel.nodes.map((node) => mapNode(node)),
 		),
@@ -76,5 +77,6 @@ export function transformSolutionModel(solution: SolutionModel): {
 		versions: versions,
 		solutionId: solution._id,
 		last_version_saved: solution.last_version_saved,
+		queries: solution.queries,
 	};
 }
