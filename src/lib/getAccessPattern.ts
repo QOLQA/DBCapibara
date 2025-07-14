@@ -43,11 +43,8 @@ function getMaxRelations(): number {
 }
 
 export function getAccessPattern() {
-	console.log("Calculating access pattern...");
 	const maxDepth = getMaxDepth();
-	console.log("Max Depth:", maxDepth);
 	const maxRelations = getMaxRelations();
-	console.log("Max Relations:", maxRelations);
 	const accessPattern = (maxDepth * 0.4) + (maxRelations * 0.6);
 
 	return accessPattern;
