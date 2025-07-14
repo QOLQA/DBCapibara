@@ -6,7 +6,7 @@ function getMaxDepth(): number {
 
 	if (nodes.length === 0) return 0;
 
-	// Función recursiva para calcular la profundidad de nestedTables
+	// Recursive function to calculate nestedTables depth
 	function calculateNestedDepth(tableData: TableData): number {
 		if (!tableData.nestedTables || tableData.nestedTables.length === 0) {
 			return 1;
@@ -19,7 +19,7 @@ function getMaxDepth(): number {
 		return 1 + Math.max(...nestedDepths);
 	}
 
-	// Calcular la profundidad máxima entre todos los nodos
+	// Calculate maximum depth among all nodes
 	const depths = nodes.map(node => calculateNestedDepth(node.data));
 
 	return Math.max(...depths);
@@ -30,7 +30,7 @@ function getMaxRelations(): number {
 
 	if (edges.length === 0) return 0;
 
-	// Contar las relaciones por nodo origen
+	// Count relations per source node
 	const relationCounts = new Map<string, number>();
 
 	edges.forEach(edge => {
@@ -38,7 +38,7 @@ function getMaxRelations(): number {
 		relationCounts.set(sourceId, (relationCounts.get(sourceId) || 0) + 1);
 	});
 
-	// Retornar el número máximo de relaciones que tiene un nodo como origen
+	// Return the maximum number of relations that a node has as source
 	return relationCounts.size > 0 ? Math.max(...relationCounts.values()) : 0;
 }
 
