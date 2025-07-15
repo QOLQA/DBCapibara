@@ -83,3 +83,10 @@ export interface VersionFrontend {
 	solution_id: string;
 	_id: string;
 }
+
+
+export interface StastType {
+	name: string;
+	value: number;
+	color: string;
+}
