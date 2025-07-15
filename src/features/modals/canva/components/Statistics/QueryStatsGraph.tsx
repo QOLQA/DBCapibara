@@ -32,17 +32,32 @@ export const QueryStatsGraph = () => {
 				data={chartData}
 				startAngle={0}
 				endAngle={porcentageAngle}
-				innerRadius={80}
-				outerRadius={110}
+				innerRadius={77}
+				outerRadius={98}
 			>
+				<defs>
+					<filter id="glow">
+						<feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+						<feMerge> 
+							<feMergeNode in="coloredBlur"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+				</defs>
 				<PolarGrid
 					gridType="circle"
 					radialLines={false}
 					stroke="none"
 					className="first:fill-[#3C4254] last:fill-cuartenary-gray"
-					polarRadius={[86, 74]}
+					style={{ filter: 'url(#glow)' }}
+					polarRadius={[80, 73]}
 				/>
-				<RadialBar dataKey="porcentage"  className="fill-cuartenary-gray" cornerRadius={10} />
+				<RadialBar 
+					dataKey="porcentage" 
+					className="fill-cuartenary-gray" 
+					cornerRadius={10}
+					style={{ filter: 'url(#glow)' }}
+				/>
 				<PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
 					<Label
 						content={({ viewBox }) => {
@@ -56,21 +71,21 @@ export const QueryStatsGraph = () => {
 									>
 										<tspan
 											x={viewBox.cx}
-											y={(viewBox.cy || 0) - 7}
+											y={(viewBox.cy || 0) - 14}
 											className="fill-white text-4xl font-bold"
 										>
 											{handledPercentage}%
 										</tspan>
 										<tspan
 											x={viewBox.cx}
-											y={(viewBox.cy || 0) + 24}
+											y={(viewBox.cy || 0) + 18}
 											className="fill-white text-p"
 										>
 											Consultas
 										</tspan>
 										<tspan
 											x={viewBox.cx}
-											y={(viewBox.cy || 0) + 40}
+											y={(viewBox.cy || 0) + 33}
 											className="fill-white text-p"
 										>
 											abordadas
