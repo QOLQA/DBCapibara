@@ -5,6 +5,7 @@ import { useState } from "react";
 import { SidebarContentPrinc } from "./SidebarContent";
 import { AppQueries } from "../Queries/AppQueries";
 import type { NavItem } from "./types";
+import { AppStatistics } from "../Statistics/AppStatistics";
 
 const data = {
 	user: {
@@ -26,6 +27,7 @@ const data = {
 		{
 			title: "Estadísticas",
 			icon: <DataPie />,
+			content: <AppStatistics/>
 		},
 	],
 };
