@@ -71,11 +71,11 @@ function getMaxRelations(edges: Edge[]): number {
  * Pure function to calculate access pattern without caching
  */
 function calculateAccessPatternPure(nodes: Node<TableData>[], edges: Edge[]): number {
-	const maxDepth = getMaxDepth(nodes);
+	const maxDepth = getMaxDepth(nodes) - 1;
 	const maxRelations = getMaxRelations(edges);
 	const accessPattern = (maxDepth * 0.4) + (maxRelations * 0.6);
 
-	return accessPattern;
+	return Math.round(accessPattern * 100) / 100
 }
 
 /**

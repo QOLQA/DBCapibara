@@ -12,7 +12,7 @@ export const AppStatistics = () => {
 	);
 
 	const data: StastType[] = [
-		{ name: "Patron de acceso", value: Math.round(accessPatternValue), color: "#0052CC" },
+		{ name: "Patron de acceso", value: accessPatternValue, color: "#0052CC" },
 		{ name: "Costo de Recuperacion", value: 80, color: "#00875A" },
 		{ name: "Redundancia", value: 40, color: "#5243AA" },
 	]
