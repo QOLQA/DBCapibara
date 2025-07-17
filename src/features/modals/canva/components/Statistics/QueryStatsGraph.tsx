@@ -1,6 +1,7 @@
 'use client'
 
-import { getHandledQueries } from "@/lib/getHandledQueries"
+import { useCanvasStore } from "@/state/canvaStore"
+import { calculateHandledQueriesPercentage } from "@/lib/getHandledQueries"
 import {
   Label,
   PolarGrid,
@@ -13,7 +14,10 @@ import {
 
 export const QueryStatsGraph = () => {
 
-	const handledPercentage = getHandledQueries()
+	const handledPercentage = useCanvasStore((state) => 
+		calculateHandledQueriesPercentage(state.queries, state.nodes, state.edges),
+	);
+
 	const porcentageAngle = (handledPercentage * 360) / 100
 	
 	const chartData = [
