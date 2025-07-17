@@ -1,9 +1,36 @@
-import { useCanvasStore } from "@/state/canvaStore";
+import type { Node, Edge } from "@xyflow/react";
 import type { TableData } from "@/features/modals/canva/types";
 
-function getMaxDepth(): number {
-	const nodes = useCanvasStore.getState().nodes;
+// Cache to avoid unnecessary recalculations
+let cachedAccessPattern: number | null = null;
+let lastNodeHash: string | null = null;
+let lastEdgeHash: string | null = null;
 
+/**
+ * Generates a hash for nodes excluding x,y positions to avoid recalculation on movement
+ */
+function generateNodeHashWithoutPosition(nodes: Node<TableData>[]): string {
+	return JSON.stringify(nodes.map(node => ({
+		id: node.id,
+		data: node.data,
+		type: node.type
+		// Intentionally exclude position to avoid recalculations on movement
+	})));
+}
+
+/**
+ * Generates a simple hash for edges
+ */
+function generateEdgeHash(edges: Edge[]): string {
+	return JSON.stringify(edges.map(edge => ({
+		id: edge.id,
+		source: edge.source,
+		target: edge.target,
+		type: edge.type
+	})));
+}
+
+function getMaxDepth(nodes: Node<TableData>[]): number {
 	if (nodes.length === 0) return 0;
 
 	// Recursive function to calculate nestedTables depth
@@ -25,9 +52,7 @@ function getMaxDepth(): number {
 	return Math.max(...depths);
 }
 
-function getMaxRelations(): number {
-	const edges = useCanvasStore.getState().edges;
-
+function getMaxRelations(edges: Edge[]): number {
 	if (edges.length === 0) return 0;
 
 	// Count relations per source node
@@ -42,10 +67,54 @@ function getMaxRelations(): number {
 	return relationCounts.size > 0 ? Math.max(...relationCounts.values()) : 0;
 }
 
-export function getAccessPattern() {
-	const maxDepth = getMaxDepth();
-	const maxRelations = getMaxRelations();
+/**
+ * Pure function to calculate access pattern without caching
+ */
+function calculateAccessPatternPure(nodes: Node<TableData>[], edges: Edge[]): number {
+	const maxDepth = getMaxDepth(nodes);
+	const maxRelations = getMaxRelations(edges);
 	const accessPattern = (maxDepth * 0.4) + (maxRelations * 0.6);
 
 	return accessPattern;
+}
+
+/**
+ * Cache validation layer - acts as dependency injection for caching logic
+ */
+function withCacheValidation(
+	nodes: Node<TableData>[],
+	edges: Edge[],
+	calculationFn: (nodes: Node<TableData>[], edges: Edge[]) => number
+): number {
+	// Generate hashes to detect changes
+	const currentNodeHash = generateNodeHashWithoutPosition(nodes);
+	const currentEdgeHash = generateEdgeHash(edges);
+
+	// If there are no relevant changes, return cached result
+	if (
+		cachedAccessPattern !== null &&
+		lastNodeHash === currentNodeHash &&
+		lastEdgeHash === currentEdgeHash
+	) {
+		return cachedAccessPattern;
+	}
+
+	// Update hashes
+	lastNodeHash = currentNodeHash;
+	lastEdgeHash = currentEdgeHash;
+
+	// Perform calculation using injected function
+	const result = calculationFn(nodes, edges);
+
+	// Cache result
+	cachedAccessPattern = result;
+
+	return result;
+}
+
+/**
+ * Main export function that combines cache validation with calculation
+ */
+export function getAccessPattern(nodes: Node<TableData>[], edges: Edge[]) {
+	return withCacheValidation(nodes, edges, calculateAccessPatternPure);
 }
