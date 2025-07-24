@@ -74,6 +74,7 @@ export interface SolutionModel {
 	versions: VersionBackend[];
 	last_version_saved: string;
 	queries: Query[]
+	src_img: string;
 }
 
 export interface VersionFrontend {
@@ -82,4 +83,11 @@ export interface VersionFrontend {
 	description: string;
 	solution_id: string;
 	_id: string;
+}
+
+
+export interface StastType {
+	name: string;
+	value: number;
+	color: string;
 }
