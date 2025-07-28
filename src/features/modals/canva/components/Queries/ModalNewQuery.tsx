@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useState } from "react";
 import { ModalSelectDocs } from "./ModalSelectDocs";
 import type { Query } from "../../types";
 
 type ModalProps = {
-	modalRef: RefObject<HTMLDialogElement | null>;
+	open: boolean;
+	setOpen: (open: boolean) => void;
 	queryEdit?: Query;
 	mode: "create" | "edit";
 	queryText: string;
@@ -13,22 +13,18 @@ type ModalProps = {
 };
 
 export const ModalNewQuery = ({
-	modalRef,
+	open,
+	setOpen,
 	mode = "create",
 	queryEdit,
 	queryText,
 	setQueryText,
 }: ModalProps) => {
-	const nextModalRef = useRef<HTMLDialogElement>(null);
-
-	const handleClose = () => {
-		modalRef.current?.close();
-		setQueryText("");
-	};
+	const [showSelectDocs, setShowSelectDocs] = useState(false);
 
 	const handleSubmit = () => {
-		modalRef.current?.close();
-		nextModalRef.current?.showModal();
+		setOpen(false);
+		setShowSelectDocs(true);
 	};
 
 	useEffect(() => {
@@ -43,9 +39,10 @@ export const ModalNewQuery = ({
 		<>
 			<Modal
 				title="Nueva Consulta"
-				modalRef={modalRef}
-				onClose={() => {}}
-				key={queryEdit?.id || "create-modal"}
+				open={open}
+				setOpen={setOpen}
+				onSubmit={handleSubmit}
+				type="next"
 			>
 				<>
 					<div className="my-13 gap-5 flex justify-between items-start flex-col">
@@ -53,44 +50,29 @@ export const ModalNewQuery = ({
 							htmlFor="docName"
 							className="text-h3 text-secondary-white pr-12"
 						>
-							Nombre
+							Consulta
 						</label>
 						<textarea
 							placeholder="Escribe tu consulta"
 							id="docName"
 							value={queryText}
 							onChange={(e) => setQueryText(e.target.value)}
-							className="text-h4 w-160 h-36 py-3 px-5 border border-gray rounded-md bg-terciary-gray focus:outline-none"
+							className="text-h4 w-full h-36 py-3 px-5 border border-gray rounded-md bg-terciary-gray focus:outline-none text-white placeholder:text-lighter-gray"
 						/>
-					</div>
-
-					<div className="flex justify-end gap-5">
-						<Button
-							variant={"outline"}
-							type="button"
-							onClick={handleClose}
-							className="cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
-						>
-							Cancelar
-						</Button>
-						<Button
-							variant={"outline"}
-							type="button"
-							onClick={handleSubmit}
-							className="cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
-						>
-							Siguiente
-						</Button>
 					</div>
 				</>
 			</Modal>
 			<ModalSelectDocs
-				nextModalRef={nextModalRef}
-				modalRef={modalRef}
+				open={showSelectDocs}
+				setOpen={setShowSelectDocs}
 				queryText={queryText}
 				queryEdit={queryEdit}
 				mode={mode}
 				setQueryText={setQueryText}
+				onReturn={() => {
+					setShowSelectDocs(false);
+					setOpen(true);
+				}}
 			/>
 		</>
 	);
