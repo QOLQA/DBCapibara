@@ -83,11 +83,13 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 				</div>
 			</main>
 
-			<AddSolutionModal
-				open={isModalOpen}
-				setOpen={setIsModalOpen}
-				onSubmit={handleAddSolution}
-			/>
+			{isModalOpen && (
+				<AddSolutionModal
+					open={isModalOpen}
+					setOpen={setIsModalOpen}
+					onSubmit={handleAddSolution}
+				/>
+			)}
 		</>
 	);
 };
