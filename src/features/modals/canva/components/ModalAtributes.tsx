@@ -11,7 +11,7 @@ import {
 	SelectTrigger,
 } from "@/components/ui/select";
 import { Trash } from "lucide-react";
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useEffect, useCallback, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 interface TableAttribute {
