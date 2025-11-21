@@ -57,7 +57,10 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 					<div className="flex gap-[68px]">
 						<Button
 							type="button"
-							onClick={() => setIsModalOpen(true)}
+							onClick={() => {
+								console.log("Open modal");
+								setIsModalOpen(true);
+							}}
 							className="text-white font-weight-900 cursor-pointer bg-black"
 						>
 							<Plus /> Nuevo Modelo
@@ -68,7 +71,7 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 					</div>
 				</div>
 			</header>
-			<main className="bg-secondary-gray pb-[144px]">
+			<main className="bg-secondary-gray pb-36 min-h-[90vh]">
 				<div className="max-w-[1330px] mx-auto">
 					<h1 className="text-center text-white text-h2">Tus modelos</h1>
 					<hr className="mt-[33px] mb-10 border-gray-400" />
@@ -80,12 +83,11 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 				</div>
 			</main>
 
-			{isModalOpen && (
-				<AddSolutionModal
-					onClose={() => setIsModalOpen(false)}
-					onSubmit={handleAddSolution}
-				/>
-			)}
+			<AddSolutionModal
+				open={isModalOpen}
+				setOpen={setIsModalOpen}
+				onSubmit={handleAddSolution}
+			/>
 		</>
 	);
 };
