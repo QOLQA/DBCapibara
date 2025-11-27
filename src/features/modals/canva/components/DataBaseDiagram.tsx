@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from "react";
+import { useState } from "react";
 import {
 	ReactFlow,
 	Background,
@@ -10,12 +10,12 @@ import type { Node } from "@xyflow/react";
 import type { TableData } from "../types";
 
 import { nodeTypes } from "./TableNode";
+import AddDocumentModal from "./AddDocumentModal";
 import "@xyflow/react/dist/style.css";
 import { Button } from "@/components/ui/button";
 import ShowErrorModal from "./ShowErrorModal";
 import { edgeTypes } from "./FloatingEdge";
 import { useTableConnections } from "@/hooks/use-node-connections";
-import ModalAddCollection from "./ModalAddCollection";
 import { canvaSelector, useCanvasStore } from "@/state/canvaStore";
 import { useShallow } from "zustand/shallow";
 import { useUniqueId } from "@/hooks/use-unique-id";
@@ -23,12 +23,6 @@ import { useUniqueId } from "@/hooks/use-unique-id";
 const connectionLineStyle = {
 	stroke: "#4E4E4E",
 	strokeWidth: 3,
-};
-
-const defaultEdgeOptions = {
-	type: "floating",
-	style: connectionLineStyle,
-	markerEnd: { type: MarkerType.ArrowClosed },
 };
 
 const DatabaseDiagram = () => {
@@ -41,104 +35,84 @@ const DatabaseDiagram = () => {
 		onNodesChange,
 		onEdgesChange,
 	} = useCanvasStore<ReturnType<typeof canvaSelector>>(
-		useShallow(canvaSelector),
+		useShallow(canvaSelector)
 	);
 
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showError, setShowError] = useState(false);
 	const generateId = useUniqueId();
 
-	const connectionConfig = useMemo(
-		() => ({
-			nodes,
-			editNode,
-			addEdge,
-			onError: () => setShowError(true),
-		}),
-		[nodes, editNode, addEdge],
-	);
+	const { handleConnect } = useTableConnections({
+		nodes,
+		editNode,
+		addEdge,
+		onError: () => setShowError(true),
+	});
 
-	const { handleConnect } = useTableConnections(connectionConfig);
+	const handleAddDocument = (name: string) => {
+		const newIdNode = generateId();
 
-	const handleAddDocument = useCallback(
-		(name: string) => {
-			const newIdNode = generateId();
-
-			const newNode: Node<TableData> = {
+		const newNode: Node<TableData> = {
+			id: newIdNode,
+			position: { x: Math.random() * 400, y: Math.random() * 400 },
+			data: {
 				id: newIdNode,
-				position: { x: Math.random() * 400, y: Math.random() * 400 },
-				data: {
-					id: newIdNode,
-					label: name,
-					columns: [
-						{
-							id: `${newIdNode}-${generateId()}`,
-							name: `${name}_id`,
-							type: "PRIMARY_KEY",
-						},
-					],
-				},
-				type: "table",
-			};
+				label: name,
+				columns: [
+					{
+						id: `${newIdNode}-${generateId()}`,
+						name: "id",
+						type: "PRIMARY_KEY",
+					},
+				],
+			},
+			type: "table",
+		};
 
-			addNode(newNode);
-		},
-		[addNode, generateId],
-	);
-
-	const handleOpenModal = useCallback(() => {
-		setIsModalOpen(true);
-	}, []);
-
-	const handleCloseModal = useCallback(() => {
-		setIsModalOpen(false);
-	}, []);
-
-	const handleCloseError = useCallback(() => {
-		setShowError(false);
-	}, []);
-
-	const reactFlowProps = useMemo(
-		() => ({
-			nodes,
-			edges,
-			onNodesChange,
-			onEdgesChange,
-			nodeTypes,
-			edgeTypes,
-			onConnect: handleConnect,
-			connectionLineStyle,
-			defaultEdgeOptions,
-			fitView: true,
-		}),
-		[nodes, edges, onNodesChange, onEdgesChange, handleConnect],
-	);
+		addNode(newNode);
+	};
 
 	return (
 		<div className="w-full h-full relative pb-[16px] pl-[5px] pr-[16px] pt-[2px]">
 			<Button
 				type="button"
-				onClick={handleOpenModal}
+				onClick={() => setIsModalOpen(true)}
 				className="absolute top-5 right-10 bg-green text-white hover:bg-green-dark z-10 cursor-pointer"
 			>
 				<span className="text-xl">+</span> Nueva Colección
 			</Button>
 
-			<ModalAddCollection
-				open={isModalOpen}
-				setOpen={handleCloseModal}
-				onSubmit={handleAddDocument}
-			/>
-
-			<ReactFlow {...reactFlowProps}>
+			<ReactFlow
+				nodes={nodes}
+				edges={edges}
+				onNodesChange={onNodesChange}
+				onEdgesChange={onEdgesChange}
+				nodeTypes={nodeTypes}
+				edgeTypes={edgeTypes}
+				onConnect={handleConnect}
+				connectionLineStyle={connectionLineStyle}
+				defaultEdgeOptions={{
+					type: "floating",
+					style: connectionLineStyle,
+					markerEnd: { type: MarkerType.ArrowClosed },
+				}}
+				fitView
+			>
 				<Background className="!bg-terciary-gray rounded-xl" />
 				<Controls className="text-white controls-with-buttons " />
 				<MiniMap nodeClassName="!fill-gray" className="!bg-secondary-gray" />
 			</ReactFlow>
 
+			{isModalOpen && (
+				<AddDocumentModal
+					onClose={() => setIsModalOpen(false)}
+					onSubmit={handleAddDocument}
+				/>
+			)}
+
 			{showError && (
 				<ShowErrorModal
-					onClose={handleCloseError}
+					onClose={() => setShowError(false)}
 					errorMessage="Ya existe una relación entre estas tablas"
 				/>
 			)}

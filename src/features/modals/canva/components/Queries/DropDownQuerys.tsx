@@ -6,24 +6,19 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreButton } from "../MoreButton";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ModalNewQuery } from "./ModalNewQuery";
 import type { Query } from "../../types";
 import { useCanvasStore } from "@/state/canvaStore";
 
 export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
-	const [open, setOpen] = useState(false);
+	const modalRef = useRef<HTMLDialogElement>(null);
 	const [queryText, setQueryText] = useState("");
 
 	const deleteQuery = useCanvasStore((state) => state.removeQuery);
 
 	const handleDelete = () => {
 		deleteQuery(editQuery.id);
-	};
-
-	const handleEdit = () => {
-		setQueryText(editQuery?.full_query || "");
-		setOpen(true);
 	};
 
 	return (
@@ -45,7 +40,10 @@ export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
 					<DropdownMenuItem
 						className="hover:!bg-cuartenary-gray"
 						type="normal"
-						onClick={handleEdit}
+						onClick={() => {
+							if (modalRef.current) modalRef.current.showModal();
+							setQueryText(editQuery?.full_query || "");
+						}}
 					>
 						<svg
 							width="16"
@@ -86,8 +84,7 @@ export const DropDownQuerys = ({ editQuery }: { editQuery: Query }) => {
 				</DropdownMenuContent>
 			</ManagedDropdownMenu>
 			<ModalNewQuery
-				open={open}
-				setOpen={setOpen}
+				modalRef={modalRef}
 				mode="edit"
 				queryEdit={editQuery}
 				queryText={queryText}
