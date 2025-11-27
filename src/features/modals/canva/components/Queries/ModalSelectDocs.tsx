@@ -1,28 +1,30 @@
-import { useState, type RefObject } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { ArrowLeft } from "lucide-react";
 import { useCanvasStore } from "@/state/canvaStore";
 import { useUniqueId } from "@/hooks/use-unique-id";
-import clsx from "clsx"; // Asegúrate de tener esta dependencia instalada
+import clsx from "clsx";
 import type { Query } from "../../types";
 
 type ModalProps = {
-	nextModalRef: RefObject<HTMLDialogElement | null>;
-	modalRef: RefObject<HTMLDialogElement | null>;
+	open: boolean;
+	setOpen: (open: boolean) => void;
 	queryText: string;
 	queryEdit?: Query;
 	mode: "create" | "edit";
 	setQueryText: (query: string) => void;
+	onReturn: () => void;
 };
 
 export const ModalSelectDocs = ({
-	nextModalRef,
-	modalRef,
+	open,
+	setOpen,
 	queryText,
 	queryEdit,
 	mode,
 	setQueryText,
+	onReturn,
 }: ModalProps) => {
 	const words = queryText.trim().split(/\s+/);
 	const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -39,7 +41,7 @@ export const ModalSelectDocs = ({
 	};
 
 	const handleClose = () => {
-		nextModalRef.current?.close?.();
+		setOpen(false);
 		setQueryText("");
 		setSelectedWords([]);
 		setError(false);
@@ -48,8 +50,7 @@ export const ModalSelectDocs = ({
 	const handleReturnModal = () => {
 		setSelectedWords([]);
 		setError(false);
-		nextModalRef.current?.close?.();
-		modalRef.current?.showModal?.();
+		onReturn();
 	};
 
 	const handleSubmitQuery = () => {
@@ -72,7 +73,13 @@ export const ModalSelectDocs = ({
 	};
 
 	return (
-		<Modal title="Nueva Consulta" modalRef={nextModalRef} onClose={() => {}}>
+		<Modal 
+			title="Nueva Consulta" 
+			open={open} 
+			setOpen={setOpen}
+			onSubmit={handleSubmitQuery}
+			type={mode === "edit" ? "update" : "create"}
+		>
 			<>
 				<div className="my-13 gap-5 w-160 flex justify-between items-start flex-col relative">
 					<p className="text-h3 text-secondary-white mb-2">
@@ -111,27 +118,6 @@ export const ModalSelectDocs = ({
 						aria-label="Volver"
 					>
 						<ArrowLeft className="text-secondary-white group-hover:text-white !w-auto !h-[26px]" />
-					</Button>
-				</div>
-
-				<div className="flex justify-end gap-5">
-					<Button
-						variant="outline"
-						type="button"
-						onClick={handleClose}
-						className="cursor-pointer text-h3 text-white bg-red border-none hover:bg-red-dark hover:text-white"
-						aria-label="Cancelar"
-					>
-						Cancelar
-					</Button>
-					<Button
-						variant="outline"
-						type="button"
-						onClick={handleSubmitQuery}
-						className="cursor-pointer text-h3 text-white bg-green border-none hover:bg-green-dark hover:text-white"
-						aria-label={mode === "edit" ? "Guardar cambios" : "Crear consulta"}
-					>
-						{mode === "edit" ? "Guardar cambios" : "Crear consulta"}
 					</Button>
 				</div>
 			</>
