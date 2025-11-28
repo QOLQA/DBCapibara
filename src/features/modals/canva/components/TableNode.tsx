@@ -1,4 +1,4 @@
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 import type { NodeTypes } from "@xyflow/react";
 
 import type { TableNodeProps } from "../types";
@@ -6,7 +6,6 @@ import { TableNodeContent } from "./TableNodeContent";
 
 // Custom node types
 export const TableNode = ({ data, id }: TableNodeProps) => {
-  const { setNodes } = useReactFlow();
 
   return (
     // table

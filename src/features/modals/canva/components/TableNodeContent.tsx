@@ -17,15 +17,6 @@ import {
 import { MoreButton } from "./MoreButton";
 // import AtributesModal from "./AtributesModal";
 import ModalDocument from "./ModalDocument";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import { useCanvasStore } from "@/state/canvaStore";
 import getKeySegment from "@/lib/getKeySegment";
