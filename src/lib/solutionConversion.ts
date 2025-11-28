@@ -28,7 +28,7 @@ export function transformSolutionModel(solution: SolutionModel): {
 	 * Nested nodes are recursively mapped to nestedTables.
 	 * For NestedNode, missing properties like position are set to default values.
 	 */
-	function mapNode(node: NodeBackend | NestedNode): Node<TableData> {
+	function mapNode(node: NodeBackend | NestedNode, submodelIndex: number): Node<TableData> {
 		const mappedNode: Node<TableData> = {
 			id: node.id,
 			// Use node.position if available, otherwise provide a default position for NestedNode
@@ -43,13 +43,14 @@ export function transformSolutionModel(solution: SolutionModel): {
 					type: col.type,
 				})),
 				// Map nested nodes to their TableData by extracting the .data property
-				nestedTables: mapNestedNode(node.nested_nodes || []),
+				nestedTables: mapNestedNode(node.nested_nodes || [], submodelIndex),
+				submodelIndex,
 			},
 		};
 		return mappedNode;
 	}
 
-	function mapNestedNode(nestedNodes: NestedNode[]): TableData[] {
+	function mapNestedNode(nestedNodes: NestedNode[], submodelIndex: number): TableData[] {
 		return nestedNodes.map((nestedNode) => ({
 			id: nestedNode.id,
 			label: nestedNode.name,
@@ -58,13 +59,14 @@ export function transformSolutionModel(solution: SolutionModel): {
 				name: col.name,
 				type: col.type,
 			})),
-			nestedTables: mapNestedNode(nestedNode.nested_nodes || []),
+			nestedTables: mapNestedNode(nestedNode.nested_nodes || [], submodelIndex),
+			submodelIndex,
 		}));
 	}
 
 	const versions = solution.versions.map((version) => ({
-		nodes: version.submodels.flatMap((submodel) =>
-			submodel.nodes.map((node) => mapNode(node)),
+		nodes: version.submodels.flatMap((submodel, submodelIndex) =>
+			submodel.nodes.map((node) => mapNode(node, submodelIndex)),
 		),
 		edges: version.submodels.flatMap((submodel) => submodel.edges),
 		description: version.description,

@@ -64,6 +64,13 @@ const DatabaseDiagram = () => {
 		(name: string) => {
 			const newIdNode = generateId();
 
+			// Calculate the next available submodelIndex
+			const existingIndices = nodes
+				.map(node => node.data.submodelIndex ?? 0)
+				.filter(index => index !== undefined);
+			const maxIndex = existingIndices.length > 0 ? Math.max(...existingIndices) : -1;
+			const newSubmodelIndex = maxIndex + 1;
+
 			const newNode: Node<TableData> = {
 				id: newIdNode,
 				position: { x: Math.random() * 400, y: Math.random() * 400 },
@@ -77,13 +84,14 @@ const DatabaseDiagram = () => {
 							type: "PRIMARY_KEY",
 						},
 					],
+					submodelIndex: newSubmodelIndex,
 				},
 				type: "table",
 			};
 
 			addNode(newNode);
 		},
-		[addNode, generateId],
+		[addNode, generateId, nodes],
 	);
 
 	const handleOpenModal = useCallback(() => {
