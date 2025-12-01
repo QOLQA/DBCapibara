@@ -105,7 +105,7 @@ function buildConnectionGraph(nodes: Node<TableData>[], edges: Edge[]): Map<stri
 		addNestedRelationships(graph, node.data);
 	});
 
-	// Add unidirectional connections based on edges (only between parent nodes)
+	// Add BIDIRECTIONAL connections based on edges (edges represent relationships that can be traversed both ways)
 	edges.forEach(edge => {
 		const sourceNode = nodes.find(n => n.id === edge.source);
 		const targetNode = nodes.find(n => n.id === edge.target);
@@ -117,8 +117,9 @@ function buildConnectionGraph(nodes: Node<TableData>[], edges: Edge[]): Map<stri
 			if (!graph.has(sourceId)) graph.set(sourceId, new Set());
 			if (!graph.has(targetId)) graph.set(targetId, new Set());
 
-			// Unidirectional: source -> target only
+			// Bidirectional: source ↔ target (can traverse both ways)
 			graph.get(sourceId)!.add(targetId);
+			graph.get(targetId)!.add(sourceId);
 		}
 	});
 
