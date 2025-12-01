@@ -8,12 +8,12 @@ import { getRecoveryCost } from "@/lib/getRecoveryCost"
 import { getRedundancyMetrics } from "@/lib/getRedundancyMetrics"
 
 export const AppStatistics = () => {
-	const accessPatternValue = useCanvasStore((state) => 
+	const accessPatternValue = useCanvasStore((state) =>
 		getAccessPattern(state.nodes, state.edges)
 	);
 
-	const recoveryCostValue = useCanvasStore((state) => 
-		getRecoveryCost(state.nodes)
+	const recoveryCostValue = useCanvasStore((state) =>
+		getRecoveryCost(state.nodes, state.edges)
 	);
 
 	const redundancyValue = useCanvasStore((state) =>
@@ -28,11 +28,11 @@ export const AppStatistics = () => {
 	return (
 		<div className="flex flex-col h-full w-full items-center justify-between gap-10">
 			<div className="w-full">
-				<QueryStatsGraph/>	
+				<QueryStatsGraph />
 			</div>
 			<div className="flex items-center justify-between w-full h-full pb-9 gap-3.5">
-				<SquadStats data={data}/>
-				<StatsLineTotal data={data}/>			
+				<SquadStats data={data} />
+				<StatsLineTotal data={data} />
 			</div>
 		</div>
 	)
