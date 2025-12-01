@@ -81,11 +81,6 @@ function calculateAccessPatternPure(nodes: Node<TableData>[], edges: Edge[]): nu
 	const maxRelations = getMaxRelations(edges);
 	const accessPattern = (maxDepth * 0.4) + (maxRelations * 0.6);
 
-	console.log("Access Pattern Calculation:", {
-		maxDepth,
-		maxRelations,
-		accessPattern
-	});
 
 	return Math.round(accessPattern * 100) / 100
 }

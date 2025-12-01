@@ -186,7 +186,6 @@ function hasPathBetweenAllTables(
 
 			// If no path exists between any combination, the query cannot be handled
 			if (!foundPath) {
-				console.log(`No path between ${uniqueCollections[i]} and ${uniqueCollections[j]}`);
 				return false;
 			}
 		}

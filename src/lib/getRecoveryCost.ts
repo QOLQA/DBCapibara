@@ -95,10 +95,6 @@ function calculateRecoveryCostPure(nodes: Node<TableData>[], edges: Edge[]): num
 	const totalNestedTables = getTotalNestedTables(nodes);
 	const accessPattern = getAccessPattern(nodes, edges || []);
 
-	console.log("Total Attributes:", totalAttributes);
-	console.log("Total Nested Tables:", totalNestedTables);
-	console.log("Access Pattern Cost:", accessPattern);
-
 	const recoveryCost = (totalAttributes * 0.51) + (totalNestedTables * 0.49) + accessPattern;
 
 	return Math.round(recoveryCost * 100) / 100;
