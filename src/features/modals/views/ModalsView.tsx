@@ -58,7 +58,6 @@ const ModalsView = ({ loaderData }: Route.ComponentProps) => {
 						<Button
 							type="button"
 							onClick={() => {
-								console.log("Open modal");
 								setIsModalOpen(true);
 							}}
 							className="text-white font-weight-900 cursor-pointer bg-black"

@@ -276,6 +276,7 @@
 	* {
 		@apply border-border outline-ring/50;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
@@ -287,7 +288,7 @@
 }
 
 .table-header {
-	@apply text-white py-2.5 bg-black pl-5 pr-1 flex justify-between items-center rounded-t-xl;
+	@apply text-white py-2.5 pl-5 pr-1 flex justify-between items-center rounded-t-xl;
 }
 
 .table-content {
@@ -321,6 +322,7 @@
 .table-attribute:hover .table-attribute__options {
 	@apply opacity-100;
 }
+
 /* Styles applied to modalsView.tsx */
 .model__thumbnail {
 	@apply h-[198px] bg-primary-gray rounded-t-xl border border-solid border-gray-400;

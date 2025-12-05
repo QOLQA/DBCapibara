@@ -17,19 +17,11 @@ import {
 import { MoreButton } from "./MoreButton";
 // import AtributesModal from "./AtributesModal";
 import ModalDocument from "./ModalDocument";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 import { useCanvasStore } from "@/state/canvaStore";
 import getKeySegment from "@/lib/getKeySegment";
 import ModalAtributes from "./ModalAtributes";
+import { getSubmodelColor } from "@/lib/submodelColors";
 
 import {
 	AddDocument,
@@ -113,18 +105,13 @@ const AttributeNode = React.memo(
 			[nodes, editNode, columnId],
 		);
 
-		const handleEditClick = useCallback(
-			async (e: React.MouseEvent) => {
-				handleEdit(column);
-			},
-			[handleEdit, column],
-		);
+		const handleEditClick = useCallback(() => {
+			handleEdit(column);
+		}, [handleEdit, column]);
 
 		const handleDeleteClick = useCallback(() => {
 			handleDeleteAttribute(column);
-		}, [handleDeleteAttribute, column]);
-
-		const handleMoreClick = useCallback((e: React.MouseEvent) => {
+		}, [handleDeleteAttribute, column]); const handleMoreClick = useCallback((e: React.MouseEvent) => {
 			e.stopPropagation();
 		}, []);
 
@@ -136,7 +123,7 @@ const AttributeNode = React.memo(
 					<div className="table-attribute__options">
 						<ManagedDropdownMenu>
 							{column.type !== "PRIMARY_KEY" &&
-							column.type !== "FOREIGN_KEY" ? (
+								column.type !== "FOREIGN_KEY" ? (
 								<DropdownMenuTrigger asChild>
 									<MoreButton
 										className="text-lighter-gray "
@@ -327,6 +314,7 @@ export const TableNodeContent = React.memo(({ data, id }: TableNodeProps) => {
 					},
 				],
 				nestedTables: [],
+				submodelIndex: data.submodelIndex,
 			};
 
 			setNodes((nodes: Node[]) => {
@@ -505,36 +493,24 @@ export const TableNodeContent = React.memo(({ data, id }: TableNodeProps) => {
 		[nodes, id],
 	);
 
-	const handleEditTable = useCallback(
-		async (e: React.MouseEvent) => {
-			e.preventDefault();
-			setIdNestedTableSelected(data.id as string);
-			await setTypeAtributesModal("update");
-			await handleFindAtributesToUpdate(data.id as string);
-			setIsAtributesModalOpen(true);
-		},
-		[data.id, handleFindAtributesToUpdate],
-	);
+	const handleEditTable = useCallback(() => {
+		setIdNestedTableSelected(data.id as string);
+		setTypeAtributesModal("update");
+		handleFindAtributesToUpdate(data.id as string);
+		setIsAtributesModalOpen(true);
+	}, [data.id, handleFindAtributesToUpdate]);
 
-	const handleAddAttributes = useCallback(
-		async (e: React.MouseEvent) => {
-			e.preventDefault();
-			setIdNestedTableSelected(data.id as string);
-			await setTypeAtributesModal("create");
-			setIsAtributesModalOpen(true);
-		},
-		[data.id],
-	);
+	const handleAddAttributes = useCallback(() => {
+		setIdNestedTableSelected(data.id as string);
+		setTypeAtributesModal("create");
+		setIsAtributesModalOpen(true);
+	}, [data.id]);
 
-	const handleAddDocuments = useCallback(
-		async (e: React.MouseEvent) => {
-			e.preventDefault();
-			setIdNestedTableSelected(data.id as string);
-			await setTypeAtributesModal("create");
-			setIsDocumentModalOpen(true);
-		},
-		[data.id],
-	);
+	const handleAddDocuments = useCallback(() => {
+		setIdNestedTableSelected(data.id as string);
+		setTypeAtributesModal("create");
+		setIsDocumentModalOpen(true);
+	}, [data.id]);
 
 	const handleDeleteTableClick = useCallback(() => {
 		handleDeleteTable(data.id as string);
@@ -573,10 +549,18 @@ export const TableNodeContent = React.memo(({ data, id }: TableNodeProps) => {
 		[data.nestedTables, id],
 	);
 
+	const headerColor = useMemo(() => {
+		const submodelIndex = data.submodelIndex ?? 0;
+		return getSubmodelColor(submodelIndex);
+	}, [data.submodelIndex]);
+
 	return (
 		<>
 			<div className="table">
-				<div className="table-header text-white">
+				<div
+					className="table-header text-white"
+					style={{ backgroundColor: headerColor }}
+				>
 					<span>{data.label}</span>
 
 					<ManagedDropdownMenu>

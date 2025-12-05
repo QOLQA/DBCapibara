@@ -12,6 +12,7 @@ export interface TableData {
 	label: string;
 	columns: Column[];
 	nestedTables?: TableData[];
+	submodelIndex?: number;
 }
 
 export interface AttributeNodeProps {

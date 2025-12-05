@@ -1,9 +1,11 @@
-import type { Node } from "@xyflow/react";
+import type { Node, Edge } from "@xyflow/react";
 import type { TableData } from "@/features/modals/canva/types";
+import { getAccessPattern } from "./getAccessPattern";
 
 // Cache to avoid unnecessary recalculations
 let cachedRecoveryCost: number | null = null;
 let lastNodeHash: string | null = null;
+let lastEdgeHash: string | null = null;
 
 /**
  * Generates a hash for nodes excluding x,y positions to avoid recalculation on movement
@@ -13,6 +15,20 @@ function generateNodeHashWithoutPosition(nodes: Node<TableData>[]): string {
 		id: node.id,
 		data: node.data,
 		type: node.type
+	})));
+}
+
+/**
+ * Generates a simple hash for edges
+ */
+function generateEdgeHash(edges: Edge[]): string {
+	if (!edges || edges.length === 0) return "[]";
+
+	return JSON.stringify(edges.map(edge => ({
+		id: edge.id,
+		source: edge.source,
+		target: edge.target,
+		type: edge.type
 	})));
 }
 
@@ -74,11 +90,12 @@ function getTotalNestedTables(nodes: Node<TableData>[]): number {
 /**
  * Pure function to calculate recovery cost without caching
  */
-function calculateRecoveryCostPure(nodes: Node<TableData>[]): number {
+function calculateRecoveryCostPure(nodes: Node<TableData>[], edges: Edge[]): number {
 	const totalAttributes = getTotalAttributes(nodes);
 	const totalNestedTables = getTotalNestedTables(nodes);
+	const accessPattern = getAccessPattern(nodes, edges || []);
 
-	const recoveryCost = (totalAttributes * 0.51) + (totalNestedTables * 0.49);
+	const recoveryCost = (totalAttributes * 0.51) + (totalNestedTables * 0.49) + accessPattern;
 
 	return Math.round(recoveryCost * 100) / 100;
 }
@@ -88,24 +105,28 @@ function calculateRecoveryCostPure(nodes: Node<TableData>[]): number {
  */
 function withCacheValidation(
 	nodes: Node<TableData>[],
-	calculationFn: (nodes: Node<TableData>[]) => number
+	edges: Edge[],
+	calculationFn: (nodes: Node<TableData>[], edges: Edge[]) => number
 ): number {
-	// Generate hash to detect changes
+	// Generate hashes to detect changes
 	const currentNodeHash = generateNodeHashWithoutPosition(nodes);
+	const currentEdgeHash = generateEdgeHash(edges || []);
 
 	// If there are no relevant changes, return cached result
 	if (
 		cachedRecoveryCost !== null &&
-		lastNodeHash === currentNodeHash
+		lastNodeHash === currentNodeHash &&
+		lastEdgeHash === currentEdgeHash
 	) {
 		return cachedRecoveryCost;
 	}
 
-	// Update hash
+	// Update hashes
 	lastNodeHash = currentNodeHash;
+	lastEdgeHash = currentEdgeHash;
 
 	// Perform calculation using injected function
-	const result = calculationFn(nodes);
+	const result = calculationFn(nodes, edges || []);
 
 	// Cache result
 	cachedRecoveryCost = result;
@@ -116,6 +137,6 @@ function withCacheValidation(
 /**
  * Main export function that combines cache validation with calculation
  */
-export function getRecoveryCost(nodes: Node<TableData>[]): number {
-	return withCacheValidation(nodes, calculateRecoveryCostPure);
+export function getRecoveryCost(nodes: Node<TableData>[], edges: Edge[]): number {
+	return withCacheValidation(nodes, edges, calculateRecoveryCostPure);
 }

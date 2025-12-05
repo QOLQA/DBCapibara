@@ -55,15 +55,21 @@ function getMaxDepth(nodes: Node<TableData>[]): number {
 function getMaxRelations(edges: Edge[]): number {
 	if (edges.length === 0) return 0;
 
-	// Count relations per source node
+	// Count relations per node (both as source and target)
 	const relationCounts = new Map<string, number>();
 
 	edges.forEach(edge => {
 		const sourceId = edge.source;
+		const targetId = edge.target;
+
+		// Count for source node
 		relationCounts.set(sourceId, (relationCounts.get(sourceId) || 0) + 1);
+
+		// Count for target node
+		relationCounts.set(targetId, (relationCounts.get(targetId) || 0) + 1);
 	});
 
-	// Return the maximum number of relations that a node has as source
+	// Return the maximum number of relations that any node has
 	return relationCounts.size > 0 ? Math.max(...relationCounts.values()) : 0;
 }
 
@@ -74,6 +80,7 @@ function calculateAccessPatternPure(nodes: Node<TableData>[], edges: Edge[]): nu
 	const maxDepth = getMaxDepth(nodes) - 1;
 	const maxRelations = getMaxRelations(edges);
 	const accessPattern = (maxDepth * 0.4) + (maxRelations * 0.6);
+
 
 	return Math.round(accessPattern * 100) / 100
 }
